@@ -129,14 +129,21 @@
                   <Enumeration Text="1,0°K" Value="3" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
+
+              <ParameterType Id="%AID%_PT-HTADeviceSelection" Name="HTADeviceSelection" op:headerExport="base" op:headerName="CLIDeviceSelection">
+                <TypeRestriction Base="Value" SizeInBit="4" UIHint="DropDown">
+                  <Enumeration Text="Deaktiviert" Value="0" Id="%ENID%" />
+                  <Enumeration Text="%CLI_ClimateDevice2Name%" Value="2" Id="%ENID%" />      
+                </TypeRestriction>
+              </ParameterType>
+
             </ParameterTypes>
             <Parameters>
-              <Parameter Id="%AID%_P-%TT%00002" Name="CheckForOneChannel" ParameterType="%AID%_PT-CheckBox" Text="" Value="1" Access="None" />
+              <!-- <Parameter Id="%AID%_P-%TT%00002" Name="CheckForOneChannel" ParameterType="%AID%_PT-CheckBox" Text="" Value="1" Access="None" />
               <Union SizeInBit="8">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%TT%00001" Name="VisibleChannels" ParameterType="%AID%_PT-HTANumChannels" Offset="0" BitOffset="0" Text="Verfügbare Kanäle" Value="%HTA_NumChannelsDefault%" SuffixText=" von %N%" />
-                <!-- 2 bits free -->
-              </Union>
+              </Union> -->
               <Union SizeInBit="24">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%TT%00006" Name="OperationMode" ParameterType="%AID%_PT-OperationMode" Offset="0" BitOffset="0" Text="Betriebsmodus" Value="0" />
@@ -170,8 +177,8 @@
               </Union>
             </Parameters>
             <ParameterRefs>
-              <ParameterRef Id="%AID%_UP-%TT%00001_R-%TT%0000101" RefId="%AID%_UP-%TT%00001" />
-              <ParameterRef Id="%AID%_P-%TT%00002_R-%TT%0000201" RefId="%AID%_P-%TT%00002" />
+              <!--<ParameterRef Id="%AID%_UP-%TT%00001_R-%TT%0000101" RefId="%AID%_UP-%TT%00001" />
+              <ParameterRef Id="%AID%_P-%TT%00002_R-%TT%0000201" RefId="%AID%_P-%TT%00002" />-->
               <ParameterRef Id="%AID%_UP-%TT%00003_R-%TT%0000301" RefId="%AID%_UP-%TT%00003" />
               <ParameterRef Id="%AID%_UP-%TT%00004_R-%TT%0000401" RefId="%AID%_UP-%TT%00004" />
               <ParameterRef Id="%AID%_UP-%TT%00004_R-%TT%0000402" RefId="%AID%_UP-%TT%00004" Text="Objekt für Heizanforderung" />
@@ -229,18 +236,6 @@
               <ParameterBlock Id="%AID%_PB-nnn" Name="Settings" Text="Allgemein" Icon="cog-outline" ShowInComObjectTree="true">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Heizungsaktor Version %ModuleVersion%" UIHint="Headline" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-
-                <ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" />
-                <choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-                  <when test="!=%N%">
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Kanalauswahl" UIHint="Headline" />
-                    <ParameterRefRef RefId="%AID%_UP-%TT%00001_R-%TT%0000101" HelpContext="BASE-Verfuegbare-Kanaele" IndentLevel="1" />
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                  </when>
-                  <when test="%N%">
-                    <Assign TargetParamRefRef="%AID%_UP-%TT%00001_R-%TT%0000101" Value="1" />
-                  </when>
-                </choose>
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Grundeinstellungen" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%TT%00006_R-%TT%0000601" IndentLevel="1" />

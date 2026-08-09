@@ -12,7 +12,6 @@
           </op:part>
           <Static>
             <Parameters>
-              <Parameter Id="%AID%_P-%TT%%CC%001" Name="Ch%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung des Kanals" Value="" />
               <Union SizeInBit="8">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%TT%%CC%002" Name="Ch%C%Active" Offset="0" BitOffset="0" ParameterType="%AID%_PT-ChannelActive" Text="Kanalaktivität" Value="0" />
@@ -124,7 +123,6 @@
               <op:usePart name="SCENE" xpath="//Static/Parameters/*" instanceFrom="1" instanceTo="12" />
             </Parameters>
             <ParameterRefs>
-              <ParameterRef Id="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_P-%TT%%CC%001" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_UP-%TT%%CC%002" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_UP-%TT%%CC%003" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_UP-%TT%%CC%004" />
@@ -223,39 +221,39 @@
               <ComObject Id="%AID%_O-%TT%%CC%023" Name="Ch%C%Scene" Number="%K22%" ObjectSize="1 Byte" Text="" FunctionText="Szene" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-18-1" />
             </ComObjectTable>
             <ComObjectRefs>
-              <ComObjectRef Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_O-%TT%%CC%001" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00202" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" FunctionText="Status Stellwert" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_O-%TT%%CC%003" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_O-%TT%%CC%004" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_O-%TT%%CC%005" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_O-%TT%%CC%006" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" RefId="%AID%_O-%TT%%CC%007" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" RefId="%AID%_O-%TT%%CC%008" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" RefId="%AID%_O-%TT%%CC%009" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" RefId="%AID%_O-%TT%%CC%010" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" RefId="%AID%_O-%TT%%CC%011" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" RefId="%AID%_O-%TT%%CC%012" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" RefId="%AID%_O-%TT%%CC%013" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" RefId="%AID%_O-%TT%%CC%014" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" RefId="%AID%_O-%TT%%CC%015" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" RefId="%AID%_O-%TT%%CC%016" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" RefId="%AID%_O-%TT%%CC%017" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" RefId="%AID%_O-%TT%%CC%018" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%019_R-%TT%%CC%01901" RefId="%AID%_O-%TT%%CC%019" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%020_R-%TT%%CC%02001" RefId="%AID%_O-%TT%%CC%020" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%021_R-%TT%%CC%02101" RefId="%AID%_O-%TT%%CC%021" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%022_R-%TT%%CC%02201" RefId="%AID%_O-%TT%%CC%022" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%023_R-%TT%%CC%02301" RefId="%AID%_O-%TT%%CC%023" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_O-%TT%%CC%001" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00202" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" FunctionText="Status Stellwert" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_O-%TT%%CC%003" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_O-%TT%%CC%004" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_O-%TT%%CC%005" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_O-%TT%%CC%006" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" RefId="%AID%_O-%TT%%CC%007" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" RefId="%AID%_O-%TT%%CC%008" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" RefId="%AID%_O-%TT%%CC%009" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" RefId="%AID%_O-%TT%%CC%010" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" RefId="%AID%_O-%TT%%CC%011" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" RefId="%AID%_O-%TT%%CC%012" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" RefId="%AID%_O-%TT%%CC%013" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" RefId="%AID%_O-%TT%%CC%014" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" RefId="%AID%_O-%TT%%CC%015" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" RefId="%AID%_O-%TT%%CC%016" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" RefId="%AID%_O-%TT%%CC%017" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" RefId="%AID%_O-%TT%%CC%018" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%019_R-%TT%%CC%01901" RefId="%AID%_O-%TT%%CC%019" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%020_R-%TT%%CC%02001" RefId="%AID%_O-%TT%%CC%020" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%021_R-%TT%%CC%02101" RefId="%AID%_O-%TT%%CC%021" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%022_R-%TT%%CC%02201" RefId="%AID%_O-%TT%%CC%022" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
+              <ComObjectRef Id="%AID%_O-%TT%%CC%023_R-%TT%%CC%02301" RefId="%AID%_O-%TT%%CC%023" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
             </ComObjectRefs>
           </Static>
           <Dynamic>
             <ChannelIndependentBlock> 
-              <choose ParamRefId="%AID%_UP-%TT%00001_R-%TT%0000101">
+              <choose ParamRefId="%AID%_UP-3000000_R-300000001">
                 <when test="&gt;=%C%">
-                  <ParameterBlock Id="%AID%_PB-nnn" Text="Kanal %Z%: {{0: ...}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" Icon="heat-wave" HelpContext="Empty" ShowInComObjectTree="true">
+                  <ParameterBlock Id="%AID%_PB-nnn" Text="Kanal %Z%: {{0: ...}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" Icon="heat-wave" HelpContext="Empty" ShowInComObjectTree="true">
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Kanaldefinition" UIHint="Headline" />
-                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" IndentLevel="1" />
+                    <ParameterRefRef RefId="%AID%_P-30%CC%000_R-30%CC%00001" IndentLevel="1" />
                     <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" IndentLevel="1" />
                     <choose ParamRefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201">
                       <when test="2">

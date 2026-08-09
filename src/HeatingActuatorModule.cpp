@@ -26,7 +26,7 @@ void HeatingActuatorModule::processInputKo(GroupObject &ko)
 {
     if (ko.asap() != HTA_KoCentralFunction &&
         (ko.asap() < HTA_KoBlockOffset ||
-         ko.asap() > HTA_KoBlockOffset + ParamHTA_VisibleChannels * HTA_KoBlockSize - 1))
+         ko.asap() > HTA_KoBlockOffset + ParamCLI_VisibleChannels * HTA_KoBlockSize - 1))
         return;
 
     logDebugP("processInputKo");
@@ -133,7 +133,7 @@ void HeatingActuatorModule::loop(bool configured)
     if (!configured)
         return;
 
-    for (uint8_t i = 0; i < MIN(ParamHTA_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
+    for (uint8_t i = 0; i < MIN(ParamCLI_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
         _channel[i]->loop(_motorPower, _currentCount, _currentAvg, _currentAvgLast);
 
     processMaxSetValuesAndRequests();
@@ -158,7 +158,7 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
     if (ParamHTA_ObjectsMaxSetValueCombined)
         maxSetValueCombined = KoHTA_MaxSetValueCombined.value(DPT_Scaling);
     
-    for (uint8_t i = 0; i < MIN(ParamHTA_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
+    for (uint8_t i = 0; i < MIN(ParamCLI_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
     {
         if (!_channel[i]->considerForRequestAndMaxSetValue())
             continue;
