@@ -239,6 +239,11 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
     }
 }
 
+HeatingActuatorChannel* HeatingActuatorModule::getChannel(uint8_t channelIndex)
+{
+    return _channel[channelIndex];
+}
+
 void HeatingActuatorModule::runMotor(uint8_t channelIndex, bool open)
 {
     stopMotor();

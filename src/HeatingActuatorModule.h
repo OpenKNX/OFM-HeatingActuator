@@ -51,6 +51,8 @@ class HeatingActuatorModule : public OpenKNX::Module
     void showHelp() override;
     bool processCommand(const std::string cmd, bool diagnoseKo) override;
 
+    HeatingActuatorChannel* getChannel(uint8_t channelIndex);
+
     void runMotor(uint8_t channelIndex, bool open);
     void stopMotor();
     

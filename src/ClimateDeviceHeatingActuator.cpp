@@ -1,3 +1,5 @@
+#include "HeatingActuatorModule.h"
+#include "HeatingActuatorChannel.h"
 #include "ClimateDeviceHeatingActuator.h"
 #include "ClimateControlModule.h"
 #include "RoomChannel.h"
@@ -161,9 +163,8 @@ void ClimateDeviceHeatingActuator::loop()
         {
             float positionValue = _piController->getPositionValue();
 
-            // connection here!
-            // positionValue => 0-100
-            //_channelIndex
+            HeatingActuatorChannel* channel = openknxHeatingActuatorModule.getChannel(_channelIndex);
+            channel->moveValveToPosition(positionValue / 100.0f);
 
             bool isActive = positionValue > 0.001;
             setIsActive(isActive);
