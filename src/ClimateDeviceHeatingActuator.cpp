@@ -37,8 +37,8 @@
 #define KoCLI_CHCoolingOutFeedback KoCLI_CKo14
 #define CLI_KoCHCoolingOutFeedback (CLI_KoCKo14 + _deviceIndex * DeviceKoOffset)
 
-#define KoCLI_CHHeatinOut KoCLI_CKo15
-#define CLI_KoCHHeatingOut (CLI_KoCKo16 + _deviceIndex * DeviceKoOffset)
+#define KoCLI_CHHeatingOut KoCLI_CKo15
+#define CLI_KoCHHeatingOut (CLI_KoCKo15 + _deviceIndex * DeviceKoOffset)
 
 #define KoCLI_CHHeatingOutFeedback KoCLI_CKo16
 #define CLI_KoCHHeatingOutFeedback (CLI_KoCKo16 + _deviceIndex * DeviceKoOffset)
@@ -93,6 +93,11 @@ ClimateDeviceHeatingActuator::ClimateDeviceHeatingActuator(
             break;
         case PT_CLIPIPreset::Custom:
             _piController = new PIController(ParamCLI_CHPII1, ParamCLI_CHPID1 * 60.0f);
+            break;
+        default:
+            // never leave the controller unset, everything else dereferences it unconditionally
+            logErrorP("Unknown PI preset %u, falling back to radiator", (uint8_t)ParamCLI_CHPIPreset1);
+            _piController = new PIController(3.0f, 80.0f * 60.0f);
             break;
     }
 }
@@ -164,6 +169,12 @@ void ClimateDeviceHeatingActuator::loop()
             float positionValue = _piController->getPositionValue();
 
             HeatingActuatorChannel* channel = openknxHeatingActuatorModule.getChannel(_channelIndex);
+            if (channel == nullptr)
+            {
+                logErrorP("No heating actuator channel for room channel %d", _channelIndex + 1);
+                return;
+            }
+
             channel->moveValveToPosition(positionValue / 100.0f);
 
             bool isActive = positionValue > 0.001;

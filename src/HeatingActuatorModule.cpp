@@ -4,6 +4,27 @@
 
 HeatingActuatorModule openknxHeatingActuatorModule;
 
+// parses a decimal number without throwing, std::stoi is not usable with disabled exceptions
+static bool parseNumber(const std::string text, uint16_t &value)
+{
+    if (text.empty())
+        return false;
+
+    uint32_t parsed = 0;
+    for (const char digit : text)
+    {
+        if (digit < '0' || digit > '9')
+            return false;
+
+        parsed = parsed * 10 + (digit - '0');
+        if (parsed > UINT16_MAX)
+            return false;
+    }
+
+    value = (uint16_t)parsed;
+    return true;
+}
+
 HeatingActuatorModule::HeatingActuatorModule()
 {
 }
@@ -24,9 +45,14 @@ const std::string HeatingActuatorModule::version()
 
 void HeatingActuatorModule::processInputKo(GroupObject &ko)
 {
-    if (ko.asap() != HTA_KoCentralFunction &&
-        (ko.asap() < HTA_KoBlockOffset ||
-         ko.asap() > HTA_KoBlockOffset + ParamCLI_VisibleChannels * HTA_KoBlockSize - 1))
+    const uint16_t asap = ko.asap();
+
+    // module wide objects (central function, heating/cooling change over, max set values, requests)
+    const bool isModuleKo = asap >= HTA_KoCentralFunction && asap <= HTA_KoRequestCombined;
+    const bool isChannelKo = asap >= HTA_KoBlockOffset &&
+                             asap < HTA_KoBlockOffset + OPENKNX_HTA_CHANNEL_COUNT * HTA_KoBlockSize;
+
+    if (!isModuleKo && !isChannelKo)
         return;
 
     logDebugP("processInputKo");
@@ -56,7 +82,7 @@ void HeatingActuatorModule::setup(bool configured)
     OPENKNX_GPIO_WIRE.setClock(OPENKNX_GPIO_CLOCK);
 #endif
 
-#ifdef OPENKNX_GPIO_WIRE
+#ifdef OPENKNX_HTA_CURRENT_INA_ADDR
     if (ina.begin())
     {
         logDebugP("INA219 setup done with address %u", ina.getAddress());
@@ -79,7 +105,9 @@ void HeatingActuatorModule::setup(bool configured)
         logDebugP("getMaxCurrent %.4f", ina.getMaxCurrent());
     }
     else
-        logDebugP("INA219 not found at address %u", ina.getAddress());
+        logErrorP("INA219 not found at address %u, motor current monitoring is not available", ina.getAddress());
+#else
+    logErrorP("No current sensor configured, motor current monitoring is not available");
 #endif
 
     pinMode(OPENKNX_HTA_MOT_PWR_PIN, OUTPUT);
@@ -103,40 +131,51 @@ void HeatingActuatorModule::setup(bool configured)
 
 void HeatingActuatorModule::loop(bool configured)
 {
-    if (_motorPower)
-    {
-        _currentAvg -= _currentAvg / 10;
-        _currentAvg += ina.getCurrent_mA() / 10;
-        _currentCount++;
-
-        if (_currentCount >= 10) 
-        {
-            if (_currentAvg > OPENKNX_HTA_CURRENT_MOT_MAX_LIMIT)
-            {
-                logDebugP("STOP MAX (current: %.2f)", _currentAvg);
-                stopMotor();
-            }
-
-            if (_currentCount % 10 == 0)
-            {
-                if (delayCheck(_debugOutputTimer, 1000)) 
-                {
-                    logDebugP("current: %.2f, last: %.2f", _currentAvg, _currentAvgLast);
-                    _debugOutputTimer = delayTimerInit();
-                }
-
-                _currentAvgLast = _currentAvg;
-            }
-        }
-    }
+    // motor protection has to work even if the device is not configured yet
+    processCurrentMeasurement();
 
     if (!configured)
         return;
 
-    for (uint8_t i = 0; i < MIN(ParamCLI_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
+    for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
         _channel[i]->loop(_motorPower, _currentCount, _currentAvg, _currentAvgLast);
 
     processMaxSetValuesAndRequests();
+}
+
+void HeatingActuatorModule::processCurrentMeasurement()
+{
+#ifdef OPENKNX_HTA_CURRENT_INA_ADDR
+    if (!_motorPower)
+        return;
+
+    _currentAvg -= _currentAvg / 10;
+    _currentAvg += ina.getCurrent_mA() / 10;
+    _currentCount++;
+
+    // the inrush current directly after motor start is far above the operating current
+    // and must not be mistaken for a blocked motor
+    if (_currentCount >= HTA_MOT_CURRENT_SETTLE_COUNT &&
+        _currentAvg > OPENKNX_HTA_CURRENT_MOT_MAX_LIMIT)
+    {
+        logErrorP("STOP: motor current above hardware limit (current: %.2f mA, limit: %.2f mA)",
+                  _currentAvg, (float)OPENKNX_HTA_CURRENT_MOT_MAX_LIMIT);
+        stopMotor(MotorStopReason::Overcurrent);
+        return;
+    }
+
+    // keep a slightly delayed copy of the average, the channels use it to detect a rising current
+    if (_currentCount % 10 == 0)
+    {
+        if (delayCheck(_debugOutputTimer, 1000))
+        {
+            logDebugP("current: %.2f, last: %.2f", _currentAvg, _currentAvgLast);
+            _debugOutputTimer = delayTimerInit();
+        }
+
+        _currentAvgLast = _currentAvg;
+    }
+#endif
 }
 
 void HeatingActuatorModule::processMaxSetValuesAndRequests()
@@ -154,45 +193,48 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
 
     if (ParamHTA_ObjectsMaxSetValueCooling)
         maxSetValueCooling = KoHTA_MaxSetValueCooling.value(DPT_Scaling);
-    
+
     if (ParamHTA_ObjectsMaxSetValueCombined)
         maxSetValueCombined = KoHTA_MaxSetValueCombined.value(DPT_Scaling);
-    
-    for (uint8_t i = 0; i < MIN(ParamCLI_VisibleChannels, OPENKNX_HTA_CHANNEL_COUNT); i++)
+
+    for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
     {
         if (!_channel[i]->considerForRequestAndMaxSetValue())
             continue;
 
+        const uint8_t setValueTarget = _channel[i]->getSetValueTarget();
+
         if (_channel[i]->isOperationModeHeating())
         {
             if (ParamHTA_ObjectsMaxSetValueHeating)
-                maxSetValueHeating = max(maxSetValueHeating, _channel[i]->getSetValueTarget());
-            
+                maxSetValueHeating = MAX(maxSetValueHeating, setValueTarget);
+
             if (ParamHTA_ObjectsHeatingCoolingRequest)
-                requestHeating = requestHeating || (_channel[i]->getSetValueTarget() > 0);
+                requestHeating = requestHeating || setValueTarget > 0;
         }
         else
         {
             if (ParamHTA_ObjectsMaxSetValueCooling)
-                maxSetValueCooling = max(maxSetValueHeating, _channel[i]->getSetValueTarget());
-            
+                maxSetValueCooling = MAX(maxSetValueCooling, setValueTarget);
+
             if (ParamHTA_ObjectsHeatingCoolingRequest)
-                requestCooling = requestCooling || (_channel[i]->getSetValueTarget() > 0);
+                requestCooling = requestCooling || setValueTarget > 0;
         }
-        
+
         if (ParamHTA_ObjectsMaxSetValueCombined)
-            maxSetValueCombined = max(maxSetValueCombined, _channel[i]->getSetValueTarget());
-            
+            maxSetValueCombined = MAX(maxSetValueCombined, setValueTarget);
+
         if (ParamHTA_ObjectsHeatingCoolingRequest)
-            requestCombined = requestCombined || (_channel[i]->getSetValueTarget() > 0);
+            requestCombined = requestCombined || setValueTarget > 0;
     }
 
     if (ParamHTA_ObjectsMaxSetValueHeating)
     {
         if (maxSetValueHeating != (uint8_t)KoHTA_MaxSetValueHeatingStatus.value(DPT_Scaling))
             KoHTA_MaxSetValueHeatingStatus.value(maxSetValueHeating, DPT_Scaling);
-        
-        if (delayCheck(ParamHTA_ObjectsMaxSetValueHeatingCyclicTimeMS, _maxValueHeatingCyclicSendTimer))
+
+        if (ParamHTA_ObjectsMaxSetValueHeatingCyclicTimeMS > 0 &&
+            delayCheck(_maxValueHeatingCyclicSendTimer, ParamHTA_ObjectsMaxSetValueHeatingCyclicTimeMS))
         {
             KoHTA_MaxSetValueHeatingStatus.value(maxSetValueHeating, DPT_Scaling);
             _maxValueHeatingCyclicSendTimer = delayTimerInit();
@@ -203,8 +245,9 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
     {
         if (maxSetValueCooling != (uint8_t)KoHTA_MaxSetValueCoolingStatus.value(DPT_Scaling))
             KoHTA_MaxSetValueCoolingStatus.value(maxSetValueCooling, DPT_Scaling);
-        
-        if (delayCheck(ParamHTA_ObjectsMaxSetValueCoolingCyclicTimeMS, _maxValueCoolingCyclicSendTimer))
+
+        if (ParamHTA_ObjectsMaxSetValueCoolingCyclicTimeMS > 0 &&
+            delayCheck(_maxValueCoolingCyclicSendTimer, ParamHTA_ObjectsMaxSetValueCoolingCyclicTimeMS))
         {
             KoHTA_MaxSetValueCoolingStatus.value(maxSetValueCooling, DPT_Scaling);
             _maxValueCoolingCyclicSendTimer = delayTimerInit();
@@ -215,8 +258,9 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
     {
         if (maxSetValueCombined != (uint8_t)KoHTA_MaxSetValueCombinedStatus.value(DPT_Scaling))
             KoHTA_MaxSetValueCombinedStatus.value(maxSetValueCombined, DPT_Scaling);
-        
-        if (delayCheck(ParamHTA_ObjectsMaxSetValueCombinedCyclicTimeMS, _maxValueCombinedCyclicSendTimer))
+
+        if (ParamHTA_ObjectsMaxSetValueCombinedCyclicTimeMS > 0 &&
+            delayCheck(_maxValueCombinedCyclicSendTimer, ParamHTA_ObjectsMaxSetValueCombinedCyclicTimeMS))
         {
             KoHTA_MaxSetValueCombinedStatus.value(maxSetValueCombined, DPT_Scaling);
             _maxValueCombinedCyclicSendTimer = delayTimerInit();
@@ -241,12 +285,24 @@ void HeatingActuatorModule::processMaxSetValuesAndRequests()
 
 HeatingActuatorChannel* HeatingActuatorModule::getChannel(uint8_t channelIndex)
 {
+    if (channelIndex >= OPENKNX_HTA_CHANNEL_COUNT)
+        return nullptr;
+
     return _channel[channelIndex];
 }
 
-void HeatingActuatorModule::runMotor(uint8_t channelIndex, bool open)
+bool HeatingActuatorModule::runMotor(uint8_t channelIndex, bool open)
 {
-    stopMotor();
+    if (channelIndex >= OPENKNX_HTA_CHANNEL_COUNT)
+        return false;
+
+    // the H-bridge and its power supply are shared, only one motor can run at a time
+    if (_motorPower)
+        return false;
+
+    // let the supply settle before the next start, especially when changing motor direction
+    if (!delayCheck(_motorStoppedAt, HTA_MOT_RESTART_DELAY))
+        return false;
 
     if (open)
     {
@@ -263,27 +319,36 @@ void HeatingActuatorModule::runMotor(uint8_t channelIndex, bool open)
         digitalWrite(OPENKNX_HTA_MOT_LOW2_PIN, MOT_LOW2_ON);
     }
 
-    _channel[channelIndex]->runMotor(open);
-    digitalWrite(OPENKNX_HTA_MOT_PWR_PIN, MOT_PWR_ON);
-
     _currentCount = 0;
     _currentAvg = 0;
     _currentAvgLast = 0;
-    _motorDirectionOpen = open;
     _motorChannelActive = channelIndex;
     _motorPower = true;
+
+    _channel[channelIndex]->runMotor(open);
+    digitalWrite(OPENKNX_HTA_MOT_PWR_PIN, MOT_PWR_ON);
+
+    return true;
 }
 
-// there is always only one more running at the same time
-void HeatingActuatorModule::stopMotor()
+// there is always only one motor running at the same time
+void HeatingActuatorModule::stopMotor(MotorStopReason reason)
 {
-    logDebugP("Stop motor");
-
     digitalWrite(OPENKNX_HTA_MOT_PWR_PIN, MOT_PWR_OFF);
+
+    const bool wasRunning = _motorPower;
     _motorPower = false;
 
+    if (wasRunning)
+    {
+        _motorStoppedAt = delayTimerInit();
+        _channel[_motorChannelActive]->stopMotor(reason);
+    }
+
+    // make sure no channel output stays active
     for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
-        _channel[i]->stopMotor();
+        if (_channel[i] != nullptr)
+            _channel[i]->motorOutputOff();
 }
 
 void HeatingActuatorModule::writeFlash()
@@ -306,30 +371,20 @@ void HeatingActuatorModule::readFlash(const uint8_t *data, const uint16_t size)
     logDebugP("Reading state from flash");
     logIndentUp();
 
-    uint8_t version = openknx.flash.readByte();
+    const uint8_t version = openknx.flash.readByte();
+    const uint32_t magicWord = openknx.flash.readInt();
+    const uint8_t channelsStored = openknx.flash.readByte();
+
     if (version != OPENKNX_HTA_FLASH_VERSION)
-    {
         logDebugP("Invalid flash version %u", version);
-        return;
-    }
-
-    uint32_t magicWord = openknx.flash.readInt();
-    if (magicWord != OPENKNX_HTA_FLASH_MAGIC_WORD)
-    {
+    else if (magicWord != OPENKNX_HTA_FLASH_MAGIC_WORD)
         logDebugP("Flash content invalid");
-        return;
-    }
+    else if (channelsStored != OPENKNX_HTA_CHANNEL_COUNT)
+        logDebugP("Incompatible channel count; %u != %u", channelsStored, OPENKNX_HTA_CHANNEL_COUNT);
+    else
+        for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
+            _channel[i]->readChannelData();
 
-    uint8_t channelsStored = openknx.flash.readByte();
-    if (channelsStored != OPENKNX_HTA_CHANNEL_COUNT)
-    {
-        logDebugP("Incompatbile channel count; %u != %u", channelsStored, OPENKNX_HTA_CHANNEL_COUNT);
-        return;
-    }
-
-    for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
-        _channel[i]->readChannelData();
-    
     logIndentDown();
 }
 
@@ -349,8 +404,8 @@ bool HeatingActuatorModule::restorePower()
     bool success = true;
     for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
         success &= _channel[i]->restorePower();
-    
-    return true;
+
+    return success;
 }
 
 void HeatingActuatorModule::showHelp()
@@ -365,12 +420,12 @@ void HeatingActuatorModule::showHelp()
 
 bool HeatingActuatorModule::processCommand(const std::string cmd, bool diagnoseKo)
 {
-    bool result = false;
+    if (cmd.length() < 5 || cmd.compare(0, 4, "hta ") != 0)
+        return false;
 
-    if (cmd.substr(0, 3) != "hta" || cmd.length() < 5)
-        return result;
+    const std::string args = cmd.substr(4);
 
-    if (cmd.length() == 5 && cmd.substr(4, 1) == "h")
+    if (args == "h")
     {
         openknx.console.writeDiagenoseKo("-> ch NN cal");
         openknx.console.writeDiagenoseKo("");
@@ -384,48 +439,49 @@ bool HeatingActuatorModule::processCommand(const std::string cmd, bool diagnoseK
         openknx.console.writeDiagenoseKo("");
         openknx.console.writeDiagenoseKo("-> stop");
         openknx.console.writeDiagenoseKo("");
-    }
-    else if (cmd.length() == 8 && cmd.substr(4, 4) == "stop")
-    {
-        stopMotor();
-        result = true;
-    }
-    else if (cmd.length() > 7 && cmd.substr(4, 2) == "ch")
-    {
-        if (cmd.length() == 13 && cmd.substr(10, 3) == "opn")
-        {
-            uint8_t channelIndex = stoi(cmd.substr(7, 2));
-            _channel[channelIndex]->setTargetPosition(HTA_POSITION_FULLY_OPEN);
-            runMotor(channelIndex, true);
-            result = true;
-        }
-        else if (cmd.length() == 13 && cmd.substr(10, 3) == "cls")
-        {
-            uint8_t channelIndex = stoi(cmd.substr(7, 2));
-            _channel[channelIndex]->setTargetPosition(HTA_POSITION_FULLY_CLOSED);
-            runMotor(channelIndex, false);
-            result = true;
-        }
-        else if (cmd.length() == 13 && cmd.substr(10, 3) == "cal")
-        {
-            uint8_t channelIndex = stoi(cmd.substr(7, 2));
-            _channel[channelIndex]->startCalibration();
-            result = true;
-        }
-        else if (cmd.length() == 14 && cmd.substr(10, 4) == "info")
-        {
-            uint8_t channelIndex = stoi(cmd.substr(7, 2));
-            _channel[channelIndex]->logChannelInfo(diagnoseKo);
-            result = true;
-        }
-        else if (cmd.length() > 10)
-        {
-            uint8_t channelIndex = stoi(cmd.substr(7, 2));
-            uint8_t targetPercent = stoi(cmd.substr(10));
-            _channel[channelIndex]->moveValveToPosition(targetPercent / 100.0);
-            result = true;
-        }
+        return true;
     }
 
-    return result;
+    if (args == "stop")
+    {
+        stopMotor();
+        return true;
+    }
+
+    // "ch NN <command>"
+    if (args.length() < 7 || args.compare(0, 3, "ch ") != 0)
+        return false;
+
+    uint16_t channelIndex = 0;
+    if (!parseNumber(args.substr(3, 2), channelIndex) ||
+        channelIndex >= OPENKNX_HTA_CHANNEL_COUNT)
+    {
+        logInfoP("Invalid channel index, valid range is 0-%u", OPENKNX_HTA_CHANNEL_COUNT - 1);
+        return true;
+    }
+
+    HeatingActuatorChannel *channel = _channel[channelIndex];
+    const std::string channelCommand = args.substr(6);
+
+    if (channelCommand == "opn")
+        channel->driveToEndStop(true);
+    else if (channelCommand == "cls")
+        channel->driveToEndStop(false);
+    else if (channelCommand == "cal")
+        channel->startCalibration();
+    else if (channelCommand == "info")
+        channel->logChannelInfo(diagnoseKo);
+    else
+    {
+        uint16_t targetPercent = 0;
+        if (!parseNumber(channelCommand, targetPercent) || targetPercent > 100)
+        {
+            logInfoP("Invalid target position, valid range is 0-100 %%");
+            return true;
+        }
+
+        channel->moveValveToPosition(targetPercent / 100.0f);
+    }
+
+    return true;
 }

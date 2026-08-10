@@ -3,13 +3,12 @@
 #include "HeatingActuatorChannel.h"
 #include "hardware.h"
 #include "knxprod.h"
-#include "INA219.h"
-#include <queue>
+#ifdef OPENKNX_HTA_CURRENT_INA_ADDR
+    #include "INA219.h"
+#endif
 
 #define OPENKNX_HTA_FLASH_VERSION 0
 #define OPENKNX_HTA_FLASH_MAGIC_WORD 2778334631
-
-#define CH_SWITCH_DEBOUNCE 250
 
 const uint8_t MOTOR_PINS[OPENKNX_HTA_CHANNEL_COUNT] = {OPENKNX_HTA_CHANNEL_PINS};
 
@@ -29,8 +28,6 @@ const uint8_t MOTOR_PINS[OPENKNX_HTA_CHANNEL_COUNT] = {OPENKNX_HTA_CHANNEL_PINS}
 #define GPIO_OUTPUT_OFF OPENKNX_HTA_GPIO_OUTPUT_ACTIVE_ON == HIGH ? LOW : HIGH
 #define GPIO_INPUT_ON   OPENKNX_HTA_GPIO_INPUT_ACTIVE_ON == HIGH ? HIGH : LOW
 #define GPIO_INPUT_OFF  OPENKNX_HTA_GPIO_INPUT_ACTIVE_ON == HIGH ? LOW : HIGH
-
-#define MOT_CURRENT_INVALID 255
 
 class HeatingActuatorModule : public OpenKNX::Module
 {
@@ -53,21 +50,23 @@ class HeatingActuatorModule : public OpenKNX::Module
 
     HeatingActuatorChannel* getChannel(uint8_t channelIndex);
 
-    void runMotor(uint8_t channelIndex, bool open);
-    void stopMotor();
-    
+    // the H-bridge and its power supply are shared by all channels, so only one motor
+    // can run at a time; returns false if the motor could not be started right now
+    bool runMotor(uint8_t channelIndex, bool open);
+    void stopMotor(MotorStopReason reason = MotorStopReason::Unknown);
+
     const std::string name() override;
     const std::string version() override;
 
   private:
+    void processCurrentMeasurement();
     void processMaxSetValuesAndRequests();
 
-    HeatingActuatorChannel *_channel[OPENKNX_HTA_CHANNEL_COUNT];
-    uint32_t _chSwitchLastTrigger[OPENKNX_HTA_CHANNEL_COUNT] = {};
+    HeatingActuatorChannel *_channel[OPENKNX_HTA_CHANNEL_COUNT] = {};
 
     bool _motorPower = false;
     uint8_t _motorChannelActive = 0;
-    bool _motorDirectionOpen = false;
+    uint32_t _motorStoppedAt = 0;
 
     float _currentAvg = 0;
     float _currentAvgLast = 0;
