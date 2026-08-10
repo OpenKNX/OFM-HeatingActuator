@@ -1,6 +1,5 @@
 #pragma once
 #include "OpenKNX.h"
-#include "PID_RT.h"
 #include "FormatHelper.h"
 
 // valve position: 0.0 = fully closed ... 1.0 = fully open
@@ -12,8 +11,6 @@
 #define HTA_POSITION_STEP 0.01f
 // deviation below which the target position counts as reached (0.5 %)
 #define HTA_POSITION_TOLERANCE 0.005f
-
-#define HTA_TEMPERATUR_INVALID -127
 
 #define HTA_MOT_RESTART_DELAY 1000 // avoid power spikes, especially when changing motor direction
 
@@ -32,16 +29,6 @@
 #define HTA_OUTPUT_LED_PHASE 3000
 #define HTA_INPUT_DEBOUNCE 50
 
-#define HTA_CONTROL_MODE_EXTERN 0
-#define HTA_CONTROL_MODE_INTERN 1
-
-#define HTA_OPERATION_MODE_HEATING 0
-#define HTA_OPERATION_MODE_COOLING 1
-#define HTA_OPERATION_MODE_HEATCOOLING 2
-
-#define HTA_OPERATION_MODE_CHANGE_OBJECT_HEATING_COOLING 0
-#define HTA_OPERATION_MODE_CHANGE_OBJECT_SUMMER_WINTER 1
-
 #define HTA_MANUAL_MODE_CHANGE_TO_AUTO_DISABLED 0
 #define HTA_MANUAL_MODE_CHANGE_TO_AUTO_TIME 1
 #define HTA_MANUAL_MODE_CHANGE_TO_AUTO_BUTTON 2
@@ -53,13 +40,20 @@
 enum class MotorStopReason : uint8_t
 {
     Unknown,       // stopped from outside: console command, power fail, unspecified
-    TargetReached, // the calculated target position has been reached
+    TargetReached, // the requested target position has been reached
     EndStop,       // mechanical end stop detected via the motor current
     NoMotor,       // no motor current measured, nothing connected
     Overcurrent,   // hardware current limit exceeded, motor blocked
     Timeout        // maximum motor run time exceeded
 };
 
+/*
+ * Drives the valve of one channel to a requested position.
+ *
+ * The set value itself is not calculated here: it is provided by the climate control
+ * module via moveValveToPosition(). This channel only adds the local overrides
+ * (enforced position, manual mode, emergency mode) and the motor/position handling.
+ */
 class HeatingActuatorChannel : public OpenKNX::Channel
 {
   public:
@@ -76,12 +70,10 @@ class HeatingActuatorChannel : public OpenKNX::Channel
     void stopMotor(MotorStopReason reason);
     void motorOutputOff();
 
-    bool considerForRequestAndMaxSetValue();
-    bool isOperationModeHeating();
     uint8_t getSetValueTarget();
 
     void startCalibration();
-    bool moveValveToPosition(float targetPositionPercent);
+    void moveValveToPosition(float targetPositionPercent);
     bool driveToEndStop(bool open);
 
     void savePower();
@@ -112,32 +104,9 @@ class HeatingActuatorChannel : public OpenKNX::Channel
         CAL_ERROR
     };
 
-    enum HvacMode : uint8_t
-    {
-        HVAC_NONE,
-        HVAC_COMFORT,
-        HVAC_STANDBY,
-        HVAC_NIGHT,
-        HVAC_PROTECT
-    };
-
     const std::string name() override;
 
-    void checkOperationMode();
-    bool isOperationModeFixed();
-    void checkHvacMode();
-    void checkTargetTempShift(float newTargetTempShift);
     void checkEmergencyMode();
-    void processScene(uint8_t sceneNumber);
-    void applyScene(bool changeHvacMode, uint8_t hvacMode,
-                    bool changeTargetTemp, int8_t targetTemp,
-                    bool changeTargetTempShift, uint8_t targetTempShiftStep);
-
-    void setOperationMode(bool newOperationModeHeating);
-    void setHvacMode(HvacMode hvacMode);
-    void setTargetTemp(float newTargetTemp);
-    void setTargetTempShift(float newTargetTempShift);
-    bool isTargetTempLocked();
     void setManualMode(bool manualMode, bool manualModeOn);
 
     void calculateNewSetValue();
@@ -153,17 +122,12 @@ class HeatingActuatorChannel : public OpenKNX::Channel
     uint32_t maxMotorRunTime();
     uint32_t calibratedDriveTime(MotorState motorState);
     void applyMotorTravel(MotorState motorState, uint32_t runTime);
-    void setTargetPosition(float targetPositionPercent);
-    void sendSetValueStatus();
+    void requestValvePosition(float targetPositionPercent);
 
     void processInput();
     void processOutput();
     void setOutputLed(bool on);
 
-    static float targetTempShiftStepSize(uint8_t step);
-
-    uint32_t _setValueCyclicSendTimer = 0;
-    uint32_t _targetTempCyclicSendTimer = 0;
     uint32_t _emergencyModeCyclicSendTimer = 0;
     uint32_t _manualModeCyclicSendTimer = 0;
 
@@ -184,20 +148,12 @@ class HeatingActuatorChannel : public OpenKNX::Channel
 
     bool _externEnforcedPosition = false;
 
+    // last set value provided by the climate control module
     float _externSetValuePercent = HTA_POSITION_INVALID;
-    float _externRoomTemp = HTA_TEMPERATUR_INVALID;
     uint32_t _lastExternValue = 0;
-
-    float _externTargetTemp = HTA_TEMPERATUR_INVALID;
-    float _externTargetTempShift = 0;
-
-    float _currentTargetTemp = HTA_TEMPERATUR_INVALID;
-    PID_RT pid;
 
     bool _currentEmergencyMode = false;
 
-    bool _currentOperationModeHeating = true;
-    HvacMode _currentHvacMode = HvacMode::HVAC_NONE;
     bool _currentManualMode = false;
     bool _currentManualModeOn = false;
     uint32_t _currentManualModeStarted = 0;

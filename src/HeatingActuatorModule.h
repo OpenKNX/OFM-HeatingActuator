@@ -60,7 +60,6 @@ class HeatingActuatorModule : public OpenKNX::Module
 
   private:
     void processCurrentMeasurement();
-    void processMaxSetValuesAndRequests();
 
     HeatingActuatorChannel *_channel[OPENKNX_HTA_CHANNEL_COUNT] = {};
 
@@ -71,10 +70,6 @@ class HeatingActuatorModule : public OpenKNX::Module
     float _currentAvg = 0;
     float _currentAvgLast = 0;
     uint32_t _currentCount = 0;
-
-    uint32_t _maxValueHeatingCyclicSendTimer = 0;
-    uint32_t _maxValueCoolingCyclicSendTimer = 0;
-    uint32_t _maxValueCombinedCyclicSendTimer = 0;
 
     uint32_t _debugOutputTimer = 0;
 

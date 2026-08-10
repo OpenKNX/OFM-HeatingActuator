@@ -47,12 +47,9 @@ void HeatingActuatorModule::processInputKo(GroupObject &ko)
 {
     const uint16_t asap = ko.asap();
 
-    // module wide objects (central function, heating/cooling change over, max set values, requests)
-    const bool isModuleKo = asap >= HTA_KoCentralFunction && asap <= HTA_KoRequestCombined;
-    const bool isChannelKo = asap >= HTA_KoBlockOffset &&
-                             asap < HTA_KoBlockOffset + OPENKNX_HTA_CHANNEL_COUNT * HTA_KoBlockSize;
-
-    if (!isModuleKo && !isChannelKo)
+    // the module itself has no objects, everything is per channel
+    if (asap < HTA_KoBlockOffset ||
+        asap >= HTA_KoBlockOffset + OPENKNX_HTA_CHANNEL_COUNT * HTA_KoBlockSize)
         return;
 
     logDebugP("processInputKo");
@@ -139,8 +136,6 @@ void HeatingActuatorModule::loop(bool configured)
 
     for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
         _channel[i]->loop(_motorPower, _currentCount, _currentAvg, _currentAvgLast);
-
-    processMaxSetValuesAndRequests();
 }
 
 void HeatingActuatorModule::processCurrentMeasurement()
@@ -176,111 +171,6 @@ void HeatingActuatorModule::processCurrentMeasurement()
         _currentAvgLast = _currentAvg;
     }
 #endif
-}
-
-void HeatingActuatorModule::processMaxSetValuesAndRequests()
-{
-    uint8_t maxSetValueHeating = 0;
-    uint8_t maxSetValueCooling = 0;
-    uint8_t maxSetValueCombined = 0;
-
-    bool requestHeating = false;
-    bool requestCooling = false;
-    bool requestCombined = false;
-
-    if (ParamHTA_ObjectsMaxSetValueHeating)
-        maxSetValueHeating = KoHTA_MaxSetValueHeating.value(DPT_Scaling);
-
-    if (ParamHTA_ObjectsMaxSetValueCooling)
-        maxSetValueCooling = KoHTA_MaxSetValueCooling.value(DPT_Scaling);
-
-    if (ParamHTA_ObjectsMaxSetValueCombined)
-        maxSetValueCombined = KoHTA_MaxSetValueCombined.value(DPT_Scaling);
-
-    for (uint8_t i = 0; i < OPENKNX_HTA_CHANNEL_COUNT; i++)
-    {
-        if (!_channel[i]->considerForRequestAndMaxSetValue())
-            continue;
-
-        const uint8_t setValueTarget = _channel[i]->getSetValueTarget();
-
-        if (_channel[i]->isOperationModeHeating())
-        {
-            if (ParamHTA_ObjectsMaxSetValueHeating)
-                maxSetValueHeating = MAX(maxSetValueHeating, setValueTarget);
-
-            if (ParamHTA_ObjectsHeatingCoolingRequest)
-                requestHeating = requestHeating || setValueTarget > 0;
-        }
-        else
-        {
-            if (ParamHTA_ObjectsMaxSetValueCooling)
-                maxSetValueCooling = MAX(maxSetValueCooling, setValueTarget);
-
-            if (ParamHTA_ObjectsHeatingCoolingRequest)
-                requestCooling = requestCooling || setValueTarget > 0;
-        }
-
-        if (ParamHTA_ObjectsMaxSetValueCombined)
-            maxSetValueCombined = MAX(maxSetValueCombined, setValueTarget);
-
-        if (ParamHTA_ObjectsHeatingCoolingRequest)
-            requestCombined = requestCombined || setValueTarget > 0;
-    }
-
-    if (ParamHTA_ObjectsMaxSetValueHeating)
-    {
-        if (maxSetValueHeating != (uint8_t)KoHTA_MaxSetValueHeatingStatus.value(DPT_Scaling))
-            KoHTA_MaxSetValueHeatingStatus.value(maxSetValueHeating, DPT_Scaling);
-
-        if (ParamHTA_ObjectsMaxSetValueHeatingCyclicTimeMS > 0 &&
-            delayCheck(_maxValueHeatingCyclicSendTimer, ParamHTA_ObjectsMaxSetValueHeatingCyclicTimeMS))
-        {
-            KoHTA_MaxSetValueHeatingStatus.value(maxSetValueHeating, DPT_Scaling);
-            _maxValueHeatingCyclicSendTimer = delayTimerInit();
-        }
-    }
-
-    if (ParamHTA_ObjectsMaxSetValueCooling)
-    {
-        if (maxSetValueCooling != (uint8_t)KoHTA_MaxSetValueCoolingStatus.value(DPT_Scaling))
-            KoHTA_MaxSetValueCoolingStatus.value(maxSetValueCooling, DPT_Scaling);
-
-        if (ParamHTA_ObjectsMaxSetValueCoolingCyclicTimeMS > 0 &&
-            delayCheck(_maxValueCoolingCyclicSendTimer, ParamHTA_ObjectsMaxSetValueCoolingCyclicTimeMS))
-        {
-            KoHTA_MaxSetValueCoolingStatus.value(maxSetValueCooling, DPT_Scaling);
-            _maxValueCoolingCyclicSendTimer = delayTimerInit();
-        }
-    }
-
-    if (ParamHTA_ObjectsMaxSetValueCombined)
-    {
-        if (maxSetValueCombined != (uint8_t)KoHTA_MaxSetValueCombinedStatus.value(DPT_Scaling))
-            KoHTA_MaxSetValueCombinedStatus.value(maxSetValueCombined, DPT_Scaling);
-
-        if (ParamHTA_ObjectsMaxSetValueCombinedCyclicTimeMS > 0 &&
-            delayCheck(_maxValueCombinedCyclicSendTimer, ParamHTA_ObjectsMaxSetValueCombinedCyclicTimeMS))
-        {
-            KoHTA_MaxSetValueCombinedStatus.value(maxSetValueCombined, DPT_Scaling);
-            _maxValueCombinedCyclicSendTimer = delayTimerInit();
-        }
-    }
-
-    if (ParamHTA_ObjectsHeatingCoolingRequest)
-    {
-        if (requestHeating != (bool)KoHTA_RequestHeating.value(DPT_Switch) &&
-            (ParamHTA_OperationMode == HTA_OPERATION_MODE_HEATING || ParamHTA_OperationMode == HTA_OPERATION_MODE_HEATCOOLING))
-            KoHTA_RequestHeating.value(requestHeating, DPT_Switch);
-
-        if (requestCooling != (bool)KoHTA_RequestCooling.value(DPT_Switch) &&
-            (ParamHTA_OperationMode == HTA_OPERATION_MODE_COOLING || ParamHTA_OperationMode == HTA_OPERATION_MODE_HEATCOOLING))
-            KoHTA_RequestCooling.value(requestCooling, DPT_Switch);
-
-        if (requestCombined != (bool)KoHTA_RequestCombined.value(DPT_Switch) &&
-            ParamHTA_OperationMode == HTA_OPERATION_MODE_HEATCOOLING)
-            KoHTA_RequestCombined.value(requestCombined, DPT_Switch);
-    }
 }
 
 HeatingActuatorChannel* HeatingActuatorModule::getChannel(uint8_t channelIndex)

@@ -5,129 +5,54 @@
     <Manufacturer RefId="M-00FA">
       <ApplicationPrograms>
         <ApplicationProgram Id="%AID%" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="SWT" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de" DynamicTableManagement="false" Linkable="true" MinEtsVersion="4.0" ApplicationNumber="0" ApplicationVersion="0" ReplacesVersions="0">
-          <op:part href="HeatingActuatorModule.parts.xml" name="SCENE" instances="12">
-            <op:param name="%ParamOffset%" value="59" increment="3" />
-            <op:param name="%Sl%" value="0" asLetter="true" increment="1" />
-            <op:param name="%PPP%" value="70" increment="8" digits="3" />
-          </op:part>
           <Static>
             <Parameters>
               <Union SizeInBit="8">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%002" Name="Ch%C%Active" Offset="0" BitOffset="0" ParameterType="%AID%_PT-ChannelActive" Text="Kanalaktivität" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%001" Name="Ch%C%Active" ParameterType="%AID%_PT-ChannelActive" Offset="0" BitOffset="0" Text="Kanalaktivität" Value="0" />
                 <!-- 6 bits free -->
-              </Union>
-              <Union SizeInBit="40">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%003" Name="Ch%C%ControlMode" ParameterType="%AID%_PT-ControlMode" Offset="0" BitOffset="0" Text="Regelungsart" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%004" Name="Ch%C%OperationMode" ParameterType="%AID%_PT-OperationMode" Offset="0" BitOffset="2" Text="Betriebsmodus" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%054" Name="Ch%C%SetValueZero" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="4" Text="" Value="1" />
-                <!-- 3 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%005" Name="Ch%C%HeatingProportional" ParameterType="%AID%_PT-Proportional" Offset="1" BitOffset="0" Text="Soll-/Ist-Differenz" Value="4" SuffixText="°K" />
-                <Parameter Id="%AID%_UP-%TT%%CC%006" Name="Ch%C%HeatingResetTime" ParameterType="%AID%_PT-ResetTime" Offset="2" BitOffset="0" Text="Nachstellzeit" Value="150" SuffixText="Min." />
-                <Parameter Id="%AID%_UP-%TT%%CC%007" Name="Ch%C%CoolingProportional" ParameterType="%AID%_PT-Proportional" Offset="3" BitOffset="0" Text="Soll-/Ist-Differenz" Value="4" SuffixText="°K" />
-                <Parameter Id="%AID%_UP-%TT%%CC%008" Name="Ch%C%CoolingResetTime" ParameterType="%AID%_PT-ResetTime" Offset="4" BitOffset="0" Text="Nachstellzeit" Value="150" SuffixText="Min." />
-              </Union>
-              <Union SizeInBit="72">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="6" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%009" Name="Ch%C%TargetTempHeatingComfort" ParameterType="%AID%_PT-TargetTemp" Offset="0" BitOffset="0" Text="Sollwert Komfort" Value="21" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%010" Name="Ch%C%TargetTempHeatingStandby" ParameterType="%AID%_PT-TargetTemp" Offset="1" BitOffset="0" Text="Sollwert Standby" Value="19" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%011" Name="Ch%C%TargetTempHeatingNight" ParameterType="%AID%_PT-TargetTemp" Offset="2" BitOffset="0" Text="Sollwert Nacht" Value="18" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%012" Name="Ch%C%TargetTempHeatingProtect" ParameterType="%AID%_PT-TargetTemp" Offset="3" BitOffset="0" Text="Sollwert Frostschutz" Value="7" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%013" Name="Ch%C%TargetTempCoolingComfort" ParameterType="%AID%_PT-TargetTemp" Offset="4" BitOffset="0" Text="Sollwert Komfort" Value="23" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%014" Name="Ch%C%TargetTempCoolingStandby" ParameterType="%AID%_PT-TargetTemp" Offset="5" BitOffset="0" Text="Sollwert Standby" Value="24" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%015" Name="Ch%C%TargetTempCoolingNight" ParameterType="%AID%_PT-TargetTemp" Offset="6" BitOffset="0" Text="Sollwert Nacht" Value="25" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%016" Name="Ch%C%TargetTempCoolingProtect" ParameterType="%AID%_PT-TargetTemp" Offset="7" BitOffset="0" Text="Sollwert Hitzeschutz" Value="35" SuffixText="°C" />
-                <Parameter Id="%AID%_UP-%TT%%CC%017" Name="Ch%C%HvacModePriority" ParameterType="%AID%_PT-HvacModePriority" Offset="8" BitOffset="0" Text="HVAC-Modus Priorität" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%018" Name="Ch%C%TargetTempResetOnHvacModeChange" ParameterType="%AID%_PT-OnOffYesNo" Offset="8" BitOffset="1" Text="Sollwerte bei HVAC-Modus-Wechsel zurücksetzen" Value="0" />
-                <!-- 6 bits free -->
-              </Union>
-              <Union SizeInBit="24">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="15" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%019" Name="Ch%C%TargetTempShiftMax" ParameterType="%AID%_PT-TargetTempShiftMax" Offset="0" BitOffset="0" Text="Maximale Sollwertverschiebung" Value="5" SuffixText="°K" />
-                <Parameter Id="%AID%_UP-%TT%%CC%020" Name="Ch%C%TargetTempShift" ParameterType="%AID%_PT-TargetTempShift" Offset="1" BitOffset="0" Text="Sollwertverschiebung Schritt" Value="2" />
-                <Parameter Id="%AID%_UP-%TT%%CC%021" Name="Ch%C%TargetTempShiftResetOnHvacModeChange" ParameterType="%AID%_PT-OnOffYesNo" Offset="1" BitOffset="2" Text="Sollwertverschiebung bei HVAC-Modus-Wechsel zurücksetzen" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%022" Name="Ch%C%TargetTempShiftResetOnNewTargetTemp" ParameterType="%AID%_PT-OnOffYesNo" Offset="1" BitOffset="3" Text="Sollwertverschiebung bei neuem Sollwert zurücksetzen" Value="0" />
-                <!-- 4 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%033" Name="Ch%C%TargetTempShiftApplyToComfort" ParameterType="%AID%_PT-CheckBox" Offset="2" BitOffset="0" Text="Komfort" SuffixText="Komfort" Value="1" Access="Read" />
-                <Parameter Id="%AID%_UP-%TT%%CC%034" Name="Ch%C%TargetTempShiftApplyToStandby" ParameterType="%AID%_PT-CheckBox" Offset="2" BitOffset="1" Text="Standby" SuffixText="Standby" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%035" Name="Ch%C%TargetTempShiftApplyToNight" ParameterType="%AID%_PT-CheckBox" Offset="2" BitOffset="2" Text="Nacht" SuffixText="Nacht" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%036" Name="Ch%C%TargetTempShiftActionNight" ParameterType="%AID%_PT-TargetTempShiftAction" Offset="2" BitOffset="3" Text="Aktion bei Verschiebung in Nacht" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%037" Name="Ch%C%TargetTempShiftActionStandby" ParameterType="%AID%_PT-TargetTempShiftAction" Offset="2" BitOffset="4" Text="Aktion bei Verschiebung in Standby" Value="0" />
-                <!-- 3 bits free -->
-              </Union>
-              <Union SizeInBit="40">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="18" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%023" Name="Ch%C%SetValueChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Stellwertänderungen senden" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%024" Name="Ch%C%TargetTempChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="1" Text="Sollwertänderungen senden" Value="0" />
-                <!-- 6 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%052" Name="Ch%C%ConsiderForRequestAndMaxSetValue" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="7" Text="Kanal bei Anforderung und max. Stellwert berücksichtigen" Value="1" />
-                <Parameter Id="%AID%_UP-%TT%%CC%025" Name="Ch%C%SetValueCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="1" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%026" Name="Ch%C%SetValueCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="1" BitOffset="2" Text="Zeit" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%027" Name="Ch%C%TargetTempCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="3" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%028" Name="Ch%C%TargetTempCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="3" BitOffset="2" Text="Zeit" Value="0" />
-              </Union>
-              <Union SizeInBit="24">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="23" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%038" Name="Ch%C%EnforcedPosition" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Zwangsstellung aktivieren" Value="0" />
-                <!-- 7 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%039" Name="Ch%C%EnforcedSetValueHeatingOrExtern" ParameterType="%AID%_PT-Percent" Offset="1" BitOffset="0" Text="Stellwert Zwangsstellung Heizen" Value="50" SuffixText="%" />
-                <Parameter Id="%AID%_UP-%TT%%CC%040" Name="Ch%C%EnforcedSetValueCooling" ParameterType="%AID%_PT-Percent" Offset="2" BitOffset="0" Text="Stellwert Zwangsstellung Kühlen" Value="50" SuffixText="%" />
-              </Union>
-              <Union SizeInBit="56">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="26" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%051" Name="Ch%C%EmergencyMode" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Notbetrieb aktivieren" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%064" Name="Ch%C%EmergencyModeChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="1" Text="Notbetrieb senden" Value="0" />
-                <!-- 6 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%029" Name="Ch%C%EmergencyModeDelayBase" ParameterType="%AID%_PT-DelayBase" Offset="1" BitOffset="0" Text="Zeitbasis" Value="1" />
-                <Parameter Id="%AID%_UP-%TT%%CC%030" Name="Ch%C%EmergencyModeDelayTime" ParameterType="%AID%_PT-DelayTime" Offset="1" BitOffset="2" Text="Zeit" Value="30" />
-                <Parameter Id="%AID%_UP-%TT%%CC%031" Name="Ch%C%EmergencyModeSetValueHeatingOrExtern" ParameterType="%AID%_PT-Percent" Offset="3" BitOffset="0" Text="Stellwert Notbetrieb Heizen" Value="50" SuffixText="%" />
-                <Parameter Id="%AID%_UP-%TT%%CC%032" Name="Ch%C%EmergencyModeSetValueCooling" ParameterType="%AID%_PT-Percent" Offset="4" BitOffset="0" Text="Stellwert Notbetrieb Kühlen" Value="50" SuffixText="%" />
-                <Parameter Id="%AID%_UP-%TT%%CC%065" Name="Ch%C%EmergencyModeCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="5" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%066" Name="Ch%C%EmergencyModeCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="5" BitOffset="2" Text="Zeit" Value="0" />
-              </Union>
-              <Union SizeInBit="56">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="33" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%042" Name="Ch%C%ManualMode" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Manueller Modus aktivieren" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%043" Name="Ch%C%ManualModeChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="1" Text="Manueller Modus senden" Value="0" />
-                <!-- 4 bits free -->
-                <Parameter Id="%AID%_UP-%TT%%CC%044" Name="Ch%C%ManualModeChangeToAuto" ParameterType="%AID%_PT-ManualModeChangeToAuto" Offset="0" BitOffset="6" Text="Umschaltung auf Automatik" Value="2" />
-                <Parameter Id="%AID%_UP-%TT%%CC%045" Name="Ch%C%ManualModeSetValueOff" ParameterType="%AID%_PT-Percent" Offset="1" BitOffset="0" Text="Stellwert bei Aus" Value="0" SuffixText="%" />
-                <Parameter Id="%AID%_UP-%TT%%CC%046" Name="Ch%C%ManualModeSetValueOn" ParameterType="%AID%_PT-Percent" Offset="2" BitOffset="0" Text="Stellwert bei An" Value="100" SuffixText="%" />
-                <Parameter Id="%AID%_UP-%TT%%CC%047" Name="Ch%C%ManualModeCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="3" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%048" Name="Ch%C%ManualModeCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="3" BitOffset="2" Text="Zeit" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%049" Name="Ch%C%ManualModeChangeToAutoBase" ParameterType="%AID%_PT-DelayBase" Offset="5" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%050" Name="Ch%C%ManualModeChangeToAutoTime" ParameterType="%AID%_PT-DelayTime" Offset="5" BitOffset="2" Text="Zeit" Value="0" />
               </Union>
               <Union SizeInBit="16">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="40" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%041" Name="Ch%C%MotorMaxCurrentClose" ParameterType="%AID%_PT-MaxCurrent" Offset="0" BitOffset="0" Text="Max. Stromstärke Schließen" Value="50" SuffixText="mA" />
-                <Parameter Id="%AID%_UP-%TT%%CC%053" Name="Ch%C%MotorMaxCurrentOpen" ParameterType="%AID%_PT-MaxCurrent" Offset="1" BitOffset="0" Text="Max. Stromstärke Öffnen" Value="30" SuffixText="mA" />
-              </Union>
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="42" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%055" Name="Ch%C%ScenesActive" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Szenen aktivieren" Value="0" />
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%002" Name="Ch%C%EnforcedPosition" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Zwangsstellung aktivieren" Value="0" />
                 <!-- 7 bits free -->
+                <Parameter Id="%AID%_UP-%TT%%CC%003" Name="Ch%C%EnforcedSetValue" ParameterType="%AID%_PT-Percent" Offset="1" BitOffset="0" Text="Stellwert Zwangsstellung" Value="50" SuffixText="%" />
               </Union>
-              <Union SizeInBit="128">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="43" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%TT%%CC%056" Name="Ch%C%HeatingPidP" ParameterType="%AID%_PT-PidValue" Offset="0" BitOffset="0" Text="PID-Controller: P" Value="4" />
-                <Parameter Id="%AID%_UP-%TT%%CC%057" Name="Ch%C%HeatingPidI" ParameterType="%AID%_PT-PidValue" Offset="2" BitOffset="0" Text="PID-Controller: I" Value="1500" SuffixText="/ 10" />
-                <Parameter Id="%AID%_UP-%TT%%CC%058" Name="Ch%C%HeatingPidD" ParameterType="%AID%_PT-PidValue" Offset="4" BitOffset="0" Text="PID-Controller: D" Value="0" SuffixText="/ 10" />
-                <Parameter Id="%AID%_UP-%TT%%CC%059" Name="Ch%C%HeatingPidInterval" ParameterType="%AID%_PT-PidInterval" Offset="6" BitOffset="0" Text="PID-Controller: Interval" Value="1000" SuffixText="ms" />
-                <Parameter Id="%AID%_UP-%TT%%CC%060" Name="Ch%C%CoolingPidP" ParameterType="%AID%_PT-PidValue" Offset="8" BitOffset="0" Text="PID-Controller: P" Value="4" />
-                <Parameter Id="%AID%_UP-%TT%%CC%061" Name="Ch%C%CoolingPidI" ParameterType="%AID%_PT-PidValue" Offset="10" BitOffset="0" Text="PID-Controller: I" Value="1500" SuffixText="/ 10" />
-                <Parameter Id="%AID%_UP-%TT%%CC%062" Name="Ch%C%CoolingPidD" ParameterType="%AID%_PT-PidValue" Offset="12" BitOffset="0" Text="PID-Controller: D" Value="0" SuffixText="/ 10" />
-                <Parameter Id="%AID%_UP-%TT%%CC%063" Name="Ch%C%CoolingPidInterval" ParameterType="%AID%_PT-PidInterval" Offset="14" BitOffset="0" Text="PID-Controller: Interval" Value="1000" SuffixText="ms" />
+              <Union SizeInBit="48">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%004" Name="Ch%C%EmergencyMode" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Notbetrieb aktivieren" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%005" Name="Ch%C%EmergencyModeChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="1" Text="Notbetrieb senden" Value="0" />
+                <!-- 6 bits free -->
+                <Parameter Id="%AID%_UP-%TT%%CC%006" Name="Ch%C%EmergencyModeDelayBase" ParameterType="%AID%_PT-DelayBase" Offset="1" BitOffset="0" Text="Zeitbasis" Value="1" />
+                <Parameter Id="%AID%_UP-%TT%%CC%007" Name="Ch%C%EmergencyModeDelayTime" ParameterType="%AID%_PT-DelayTime" Offset="1" BitOffset="2" Text="Zeit" Value="30" />
+                <Parameter Id="%AID%_UP-%TT%%CC%008" Name="Ch%C%EmergencyModeSetValue" ParameterType="%AID%_PT-Percent" Offset="3" BitOffset="0" Text="Stellwert Notbetrieb" Value="50" SuffixText="%" />
+                <Parameter Id="%AID%_UP-%TT%%CC%009" Name="Ch%C%EmergencyModeCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="4" BitOffset="0" Text="Zeitbasis" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%010" Name="Ch%C%EmergencyModeCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="4" BitOffset="2" Text="Zeit" Value="0" />
               </Union>
-              <op:usePart name="SCENE" xpath="//Static/Parameters/*" instanceFrom="1" instanceTo="12" />
+              <Union SizeInBit="56">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="9" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%011" Name="Ch%C%ManualMode" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="0" Text="Manueller Modus aktivieren" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%012" Name="Ch%C%ManualModeChangeSend" ParameterType="%AID%_PT-OnOffYesNo" Offset="0" BitOffset="1" Text="Manueller Modus senden" Value="0" />
+                <!-- 4 bits free -->
+                <Parameter Id="%AID%_UP-%TT%%CC%013" Name="Ch%C%ManualModeChangeToAuto" ParameterType="%AID%_PT-ManualModeChangeToAuto" Offset="0" BitOffset="6" Text="Umschaltung auf Automatik" Value="2" />
+                <Parameter Id="%AID%_UP-%TT%%CC%014" Name="Ch%C%ManualModeSetValueOff" ParameterType="%AID%_PT-Percent" Offset="1" BitOffset="0" Text="Stellwert bei Aus" Value="0" SuffixText="%" />
+                <Parameter Id="%AID%_UP-%TT%%CC%015" Name="Ch%C%ManualModeSetValueOn" ParameterType="%AID%_PT-Percent" Offset="2" BitOffset="0" Text="Stellwert bei An" Value="100" SuffixText="%" />
+                <Parameter Id="%AID%_UP-%TT%%CC%016" Name="Ch%C%ManualModeCyclicBase" ParameterType="%AID%_PT-DelayBase" Offset="3" BitOffset="0" Text="Zeitbasis" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%017" Name="Ch%C%ManualModeCyclicTime" ParameterType="%AID%_PT-DelayTime" Offset="3" BitOffset="2" Text="Zeit" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%018" Name="Ch%C%ManualModeChangeToAutoBase" ParameterType="%AID%_PT-DelayBase" Offset="5" BitOffset="0" Text="Zeitbasis" Value="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%019" Name="Ch%C%ManualModeChangeToAutoTime" ParameterType="%AID%_PT-DelayTime" Offset="5" BitOffset="2" Text="Zeit" Value="0" />
+              </Union>
+              <Union SizeInBit="16">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="16" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%020" Name="Ch%C%MotorMaxCurrentClose" ParameterType="%AID%_PT-MaxCurrent" Offset="0" BitOffset="0" Text="Max. Stromstärke Schließen" Value="50" SuffixText="mA" />
+                <Parameter Id="%AID%_UP-%TT%%CC%021" Name="Ch%C%MotorMaxCurrentOpen" ParameterType="%AID%_PT-MaxCurrent" Offset="1" BitOffset="0" Text="Max. Stromstärke Öffnen" Value="30" SuffixText="mA" />
+              </Union>
             </Parameters>
             <ParameterRefs>
+              <ParameterRef Id="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_UP-%TT%%CC%001" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_UP-%TT%%CC%002" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_UP-%TT%%CC%003" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_UP-%TT%%CC%004" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00402" RefId="%AID%_UP-%TT%%CC%004" Access="Read" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00403" RefId="%AID%_UP-%TT%%CC%004" Value="1" Access="Read" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_UP-%TT%%CC%005" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_UP-%TT%%CC%006" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" RefId="%AID%_UP-%TT%%CC%007" />
@@ -145,280 +70,54 @@
               <ParameterRef Id="%AID%_UP-%TT%%CC%019_R-%TT%%CC%01901" RefId="%AID%_UP-%TT%%CC%019" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%020_R-%TT%%CC%02001" RefId="%AID%_UP-%TT%%CC%020" />
               <ParameterRef Id="%AID%_UP-%TT%%CC%021_R-%TT%%CC%02101" RefId="%AID%_UP-%TT%%CC%021" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%022_R-%TT%%CC%02201" RefId="%AID%_UP-%TT%%CC%022" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%023_R-%TT%%CC%02301" RefId="%AID%_UP-%TT%%CC%023" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%024_R-%TT%%CC%02401" RefId="%AID%_UP-%TT%%CC%024" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%025_R-%TT%%CC%02501" RefId="%AID%_UP-%TT%%CC%025" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%026_R-%TT%%CC%02601" RefId="%AID%_UP-%TT%%CC%026" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%027_R-%TT%%CC%02701" RefId="%AID%_UP-%TT%%CC%027" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%028_R-%TT%%CC%02801" RefId="%AID%_UP-%TT%%CC%028" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%029_R-%TT%%CC%02901" RefId="%AID%_UP-%TT%%CC%029" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%030_R-%TT%%CC%03001" RefId="%AID%_UP-%TT%%CC%030" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%031_R-%TT%%CC%03101" RefId="%AID%_UP-%TT%%CC%031" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%031_R-%TT%%CC%03102" RefId="%AID%_UP-%TT%%CC%031" Text="Stellwert Notbetrieb" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%032_R-%TT%%CC%03201" RefId="%AID%_UP-%TT%%CC%032" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%033_R-%TT%%CC%03301" RefId="%AID%_UP-%TT%%CC%033" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%034_R-%TT%%CC%03401" RefId="%AID%_UP-%TT%%CC%034" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%035_R-%TT%%CC%03501" RefId="%AID%_UP-%TT%%CC%035" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%036_R-%TT%%CC%03601" RefId="%AID%_UP-%TT%%CC%036" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%037_R-%TT%%CC%03701" RefId="%AID%_UP-%TT%%CC%037" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%038_R-%TT%%CC%03801" RefId="%AID%_UP-%TT%%CC%038" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%039_R-%TT%%CC%03901" RefId="%AID%_UP-%TT%%CC%039" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%039_R-%TT%%CC%03902" RefId="%AID%_UP-%TT%%CC%039" Text="Stellwert Zwangsstellung" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%040_R-%TT%%CC%04001" RefId="%AID%_UP-%TT%%CC%040" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%041_R-%TT%%CC%04101" RefId="%AID%_UP-%TT%%CC%041" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%042_R-%TT%%CC%04201" RefId="%AID%_UP-%TT%%CC%042" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%043_R-%TT%%CC%04301" RefId="%AID%_UP-%TT%%CC%043" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%044_R-%TT%%CC%04401" RefId="%AID%_UP-%TT%%CC%044" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%045_R-%TT%%CC%04501" RefId="%AID%_UP-%TT%%CC%045" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%046_R-%TT%%CC%04601" RefId="%AID%_UP-%TT%%CC%046" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%047_R-%TT%%CC%04701" RefId="%AID%_UP-%TT%%CC%047" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%048_R-%TT%%CC%04801" RefId="%AID%_UP-%TT%%CC%048" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%049_R-%TT%%CC%04901" RefId="%AID%_UP-%TT%%CC%049" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%050_R-%TT%%CC%05001" RefId="%AID%_UP-%TT%%CC%050" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%051_R-%TT%%CC%05101" RefId="%AID%_UP-%TT%%CC%051" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%052_R-%TT%%CC%05201" RefId="%AID%_UP-%TT%%CC%052" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%053_R-%TT%%CC%05301" RefId="%AID%_UP-%TT%%CC%053" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%054_R-%TT%%CC%05401" RefId="%AID%_UP-%TT%%CC%054" Text="Heizen-Stellwert im Sommer auf 0 %" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%054_R-%TT%%CC%05402" RefId="%AID%_UP-%TT%%CC%054" Text="Kühlen-Stellwert im Winter auf 0 %" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%055_R-%TT%%CC%05501" RefId="%AID%_UP-%TT%%CC%055" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%056_R-%TT%%CC%05601" RefId="%AID%_UP-%TT%%CC%056" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%057_R-%TT%%CC%05701" RefId="%AID%_UP-%TT%%CC%057" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%058_R-%TT%%CC%05801" RefId="%AID%_UP-%TT%%CC%058" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%059_R-%TT%%CC%05901" RefId="%AID%_UP-%TT%%CC%059" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%060_R-%TT%%CC%06001" RefId="%AID%_UP-%TT%%CC%060" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%061_R-%TT%%CC%06101" RefId="%AID%_UP-%TT%%CC%061" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%062_R-%TT%%CC%06201" RefId="%AID%_UP-%TT%%CC%062" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%063_R-%TT%%CC%06301" RefId="%AID%_UP-%TT%%CC%063" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%064_R-%TT%%CC%06401" RefId="%AID%_UP-%TT%%CC%064" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%065_R-%TT%%CC%06501" RefId="%AID%_UP-%TT%%CC%065" />
-              <ParameterRef Id="%AID%_UP-%TT%%CC%066_R-%TT%%CC%06601" RefId="%AID%_UP-%TT%%CC%066" />
-              <op:usePart name="SCENE" xpath="//Static/ParameterRefs/*" instanceFrom="1" instanceTo="12" />
             </ParameterRefs>
             <ComObjectTable>
-              <ComObject Id="%AID%_O-%TT%%CC%001" Name="Ch%C%SetValueInput" Number="%K0%" ObjectSize="1 Byte" Text="" FunctionText="Eingang Stellwert" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%002" Name="Ch%C%SetValueStatusHeatingOrExtern" Number="%K1%" ObjectSize="1 Byte" Text="" FunctionText="Status Stellwert Heizen" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%003" Name="Ch%C%SetValueStatusCooling" Number="%K2%" ObjectSize="1 Byte" Text="" FunctionText="Status Stellwert Kühlen" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%004" Name="Ch%C%HvacModeInput" Number="%K3%" ObjectSize="1 Byte" Text="" FunctionText="Eingang Betriebsmodus" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-20-102" />
-              <ComObject Id="%AID%_O-%TT%%CC%005" Name="Ch%C%HvacModeInputComfort" Number="%K4%" ObjectSize="1 Bit" Text="" FunctionText="Schalten Betriebsmodus Komfort" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%006" Name="Ch%C%HvacModeInputNight" Number="%K5%" ObjectSize="1 Bit" Text="" FunctionText="Schalten Betriebsmodus Nacht" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%007" Name="Ch%C%HvacModeInputProtect" Number="%K6%" ObjectSize="1 Bit" Text="" FunctionText="Schalten Betriebsmodus Frost-/Hitzeschutz" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%008" Name="Ch%C%HvacModeStatus" Number="%K7%" ObjectSize="1 Byte" Text="" FunctionText="Status Betriebsmodus" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-20-102" />
-              <ComObject Id="%AID%_O-%TT%%CC%009" Name="Ch%C%RoomTempInput" Number="%K8%" ObjectSize="2 Bytes" Text="" FunctionText="Eingang Temperatur" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-9-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%010" Name="Ch%C%TargetTempInput" Number="%K9%" ObjectSize="2 Bytes" Text="" FunctionText="Eingang Sollwert" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-9-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%011" Name="Ch%C%TargetTempStatus" Number="%K10%" ObjectSize="2 Bytes" Text="" FunctionText="Status Sollwert" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-9-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%012" Name="Ch%C%TargetTempShiftInput" Number="%K11%" ObjectSize="2 Bytes" Text="" FunctionText="Eingang Sollwertverschiebung" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-9-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%013" Name="Ch%C%TargetTempShiftStep" Number="%K12%" ObjectSize="1 Bit" Text="" FunctionText="Eingang Sollwertverschiebung Schritt (1=+, 0=-)" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%014" Name="Ch%C%TargetTempShiftStatus" Number="%K13%" ObjectSize="2 Bytes" Text="" FunctionText="Status Sollwertverschiebung" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-9-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%015" Name="Ch%C%TargetTempLockHeating" Number="%K14%" ObjectSize="1 Bit" Text="" FunctionText="Sperren Sollwert Heizen" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%016" Name="Ch%C%TargetTempLockHeatingStatus" Number="%K15%" ObjectSize="1 Bit" Text="" FunctionText="Sperrstatus Sollwert Heizen" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%017" Name="Ch%C%TargetTempLockCooling" Number="%K16%" ObjectSize="1 Bit" Text="" FunctionText="Sperren Sollwert Kühlen" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%018" Name="Ch%C%TargetTempLockCoolingStatus" Number="%K17%" ObjectSize="1 Bit" Text="" FunctionText="Sperrstatus Sollwert Kühlen" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%019" Name="Ch%C%EnforcedPosition" Number="%K18%" ObjectSize="1 Bit" Text="" FunctionText="Zwangsstellung" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%020" Name="Ch%C%EmergencyModeStatus" Number="%K19%" ObjectSize="1 Bit" Text="" FunctionText="Status Notbetrieb (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%021" Name="Ch%C%ManualMode" Number="%K20%" ObjectSize="1 Bit" Text="" FunctionText="Manueller Modus (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%022" Name="Ch%C%ManualModeStatus" Number="%K21%" ObjectSize="1 Bit" Text="" FunctionText="Status manueller Modus (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%023" Name="Ch%C%Scene" Number="%K22%" ObjectSize="1 Byte" Text="" FunctionText="Szene" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-18-1" />
+              <ComObject Id="%AID%_O-%TT%%CC%001" Name="Ch%C%EnforcedPosition" Number="%K0%" ObjectSize="1 Bit" Text="" FunctionText="Zwangsstellung" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%TT%%CC%002" Name="Ch%C%EmergencyModeStatus" Number="%K1%" ObjectSize="1 Bit" Text="" FunctionText="Status Notbetrieb (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%TT%%CC%003" Name="Ch%C%ManualMode" Number="%K2%" ObjectSize="1 Bit" Text="" FunctionText="Manueller Modus (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%TT%%CC%004" Name="Ch%C%ManualModeStatus" Number="%K3%" ObjectSize="1 Bit" Text="" FunctionText="Status manueller Modus (0=inaktiv/auto, 1=aktiv/manuell)" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_O-%TT%%CC%001" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
               <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00202" RefId="%AID%_O-%TT%%CC%002" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" FunctionText="Status Stellwert" />
               <ComObjectRef Id="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_O-%TT%%CC%003" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
               <ComObjectRef Id="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_O-%TT%%CC%004" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_O-%TT%%CC%005" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_O-%TT%%CC%006" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" RefId="%AID%_O-%TT%%CC%007" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" RefId="%AID%_O-%TT%%CC%008" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" RefId="%AID%_O-%TT%%CC%009" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" RefId="%AID%_O-%TT%%CC%010" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" RefId="%AID%_O-%TT%%CC%011" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" RefId="%AID%_O-%TT%%CC%012" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" RefId="%AID%_O-%TT%%CC%013" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" RefId="%AID%_O-%TT%%CC%014" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" RefId="%AID%_O-%TT%%CC%015" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" RefId="%AID%_O-%TT%%CC%016" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" RefId="%AID%_O-%TT%%CC%017" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" RefId="%AID%_O-%TT%%CC%018" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%019_R-%TT%%CC%01901" RefId="%AID%_O-%TT%%CC%019" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%020_R-%TT%%CC%02001" RefId="%AID%_O-%TT%%CC%020" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%021_R-%TT%%CC%02101" RefId="%AID%_O-%TT%%CC%021" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%022_R-%TT%%CC%02201" RefId="%AID%_O-%TT%%CC%022" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
-              <ComObjectRef Id="%AID%_O-%TT%%CC%023_R-%TT%%CC%02301" RefId="%AID%_O-%TT%%CC%023" Text="Kanal %Z%: {{0:}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" />
             </ComObjectRefs>
           </Static>
           <Dynamic>
-            <ChannelIndependentBlock> 
+            <ChannelIndependentBlock>
               <choose ParamRefId="%AID%_UP-3000000_R-300000001">
                 <when test="&gt;=%C%">
                   <ParameterBlock Id="%AID%_PB-nnn" Text="Kanal %Z%: {{0: ...}}" TextParameterRefId="%AID%_P-30%CC%000_R-30%CC%00001" Icon="heat-wave" HelpContext="Empty" ShowInComObjectTree="true">
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Kanaldefinition" UIHint="Headline" />
                     <ParameterRefRef RefId="%AID%_P-30%CC%000_R-30%CC%00001" IndentLevel="1" />
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" IndentLevel="1" />
-                    <choose ParamRefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201">
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" IndentLevel="1" />
+                    <choose ParamRefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101">
                       <when test="2">
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn ein Kanal funktionslos geschaltet wird, bleiben alle Parameter und GA-Zuweisungen erhalten, ohne dass der Kanal etwas macht. Dies kann bei einer Fehlersuche sinnvoll sein." />
                       </when>
-                      <when test=">0">
-                        <ParameterSeparator Id="%AID%_PS-nnn" Text="Grundeinstellungen" UIHint="Headline" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" IndentLevel="1" />
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                          <when test="0"> <!-- external set value -->
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
-                          </when>
-                          <when test="1"> <!-- internal regulator -->
-                            <choose ParamRefId="%AID%_UP-%TT%00006_R-%TT%0000601"> <!-- global OperationMode -->
-                              <when test="0">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00402" IndentLevel="1" />
-                                <Assign TargetParamRefRef="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" SourceParamRefRef="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00402" />
-                              </when>
-                              <when test="1">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00403" IndentLevel="1" />
-                                <Assign TargetParamRefRef="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" SourceParamRefRef="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00403" />
-                              </when>
-                              <when test="2">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" IndentLevel="1" />
-                              </when>
-                            </choose>
-                            
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                              <when test="0">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%054_R-%TT%%CC%05401" IndentLevel="1" />
-                              </when>
-                              <when test="1">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%054_R-%TT%%CC%05402" IndentLevel="1" />
-                              </when>
-                            </choose>
-
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%017_R-%TT%%CC%01701" IndentLevel="1" />
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%018_R-%TT%%CC%01801" IndentLevel="1" />
-
-                            <!--
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                              <when test="0 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Regelparameter Heizung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" IndentLevel="1" />
-                              </when>
-                              <when test="1 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Regelparameter Kühlung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%008_R-%TT%%CC%00801" IndentLevel="1" />
-                              </when>
-                            </choose>
-                            -->
-
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                              <when test="0 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Regelparameter Heizung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%056_R-%TT%%CC%05601" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%057_R-%TT%%CC%05701" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%058_R-%TT%%CC%05801" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%059_R-%TT%%CC%05901" IndentLevel="1" />
-                              </when>
-                              <when test="1 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Regelparameter Kühlung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%060_R-%TT%%CC%06001" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%061_R-%TT%%CC%06101" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%062_R-%TT%%CC%06201" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%063_R-%TT%%CC%06301" IndentLevel="1" />
-                              </when>
-                            </choose>
-
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                              <when test="0 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Sollwerte Heizung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%009_R-%TT%%CC%00901" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%010_R-%TT%%CC%01001" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%011_R-%TT%%CC%01101" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%012_R-%TT%%CC%01201" IndentLevel="1" />
-                              </when>
-                              <when test="1 2">
-                                <ParameterSeparator Id="%AID%_PS-nnn" Text="Sollwerte Kühlung" UIHint="Headline" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%013_R-%TT%%CC%01301" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%014_R-%TT%%CC%01401" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%015_R-%TT%%CC%01501" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%016_R-%TT%%CC%01601" IndentLevel="1" />
-                              </when>
-                            </choose>
-
-                            <ParameterSeparator Id="%AID%_PS-nnn" Text="Sollwertverschiebung" UIHint="Headline" />
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%019_R-%TT%%CC%01901" IndentLevel="1" />
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%019_R-%TT%%CC%01901">
-                              <when test=">0">
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%020_R-%TT%%CC%02001" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%021_R-%TT%%CC%02101" IndentLevel="1" />
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%022_R-%TT%%CC%02201" IndentLevel="1" />
-
-                                <ParameterBlock Id="%AID%_PB-nnn" Name="TargetTempShiftApplyTo" Inline="true" Layout="Grid">
-                                  <Rows>
-                                    <Row Id="%AID%_PB-nnn_R-1" Name="Row1" />
-                                  </Rows>
-                                  <Columns>
-                                    <Column Id="%AID%_PB-nnn_C-1" Name="Col1" Width="1%" />
-                                    <Column Id="%AID%_PB-nnn_C-2" Name="Col2" Width="44%" />
-                                    <Column Id="%AID%_PB-nnn_C-3" Name="Col3" Width="15%" />
-                                    <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="15%" />
-                                    <Column Id="%AID%_PB-nnn_C-5" Name="Col5" Width="13%" />
-                                  </Columns>
-                                  <ParameterSeparator Id="%AID%_PS-nnn" Text=" Sollwertverschiebung gilt für" Cell="1,2" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%033_R-%TT%%CC%03301" Cell="1,3" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%034_R-%TT%%CC%03401" Cell="1,4" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%035_R-%TT%%CC%03501" Cell="1,5" />
-                                </ParameterBlock>
-                                
-                                <choose ParamRefId="%AID%_UP-%TT%%CC%034_R-%TT%%CC%03401">
-                                  <when test="0">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%036_R-%TT%%CC%03601" IndentLevel="1" />
-                                  </when>
-                                </choose>
-                                <choose ParamRefId="%AID%_UP-%TT%%CC%035_R-%TT%%CC%03501">
-                                  <when test="0">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%037_R-%TT%%CC%03701" IndentLevel="1" />
-                                  </when>
-                                </choose>
-                  
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" />
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" />
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" />
-                              </when>
-                            </choose>
-                          </when>
-                        </choose>
+                      <when test="&gt;0">
+                        <ParameterSeparator Id="%AID%_PS-nnn" Text="Der Stellwert dieses Kanals wird vom Modul Raumtemperaturregelung vorgegeben. Die folgenden Einstellungen übersteuern diesen Stellwert nur in Sonderfällen." UIHint="Information" />
 
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Zwangsführung" UIHint="Headline" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%038_R-%TT%%CC%03801" IndentLevel="1" />
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%038_R-%TT%%CC%03801">
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" IndentLevel="1" />
+                        <choose ParamRefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201">
                           <when test="1">
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                              <when test="0"> <!-- external set value -->
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%039_R-%TT%%CC%03902" IndentLevel="1" />
-                              </when>
-                              <when test="1"> <!-- internal regulator -->
-                                <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                                  <when test="0 2">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%039_R-%TT%%CC%03901" IndentLevel="1" />
-                                  </when>
-                                  <when test="1 2">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%040_R-%TT%%CC%04001" IndentLevel="1" />
-                                  </when>
-                                </choose>
-                              </when>
-                            </choose>
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" IndentLevel="1" />
 
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%019_R-%TT%%CC%01901" />
+                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
                           </when>
                         </choose>
 
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Manueller Modus" UIHint="Headline" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%042_R-%TT%%CC%04201" IndentLevel="1" />
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%042_R-%TT%%CC%04201">
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%011_R-%TT%%CC%01101" IndentLevel="1" />
+                        <choose ParamRefId="%AID%_UP-%TT%%CC%011_R-%TT%%CC%01101">
                           <when test="1">
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%045_R-%TT%%CC%04501" IndentLevel="1" />
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%046_R-%TT%%CC%04601" IndentLevel="1" />
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%014_R-%TT%%CC%01401" IndentLevel="1" />
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%015_R-%TT%%CC%01501" IndentLevel="1" />
 
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%043_R-%TT%%CC%04301" IndentLevel="1" />
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%043_R-%TT%%CC%04301">
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%012_R-%TT%%CC%01201" IndentLevel="1" />
+                            <choose ParamRefId="%AID%_UP-%TT%%CC%012_R-%TT%%CC%01201">
                               <when test="1">
                                 <!-- Status Cyclic pattern -->
                                 <ParameterBlock Id="%AID%_PB-nnn" Name="ManualModeCyclic" Inline="true" Layout="Grid">
@@ -432,16 +131,16 @@
                                     <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
                                   </Columns>
                                   <ParameterSeparator Id="%AID%_PS-nnn" Text=" Manueller Modus zyklisch senden&#10; (0 = nicht senden)" Cell="1,2" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%048_R-%TT%%CC%04801" Cell="1,3" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%047_R-%TT%%CC%04701" Cell="1,4" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%017_R-%TT%%CC%01701" Cell="1,3" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%016_R-%TT%%CC%01601" Cell="1,4" />
                                 </ParameterBlock>
 
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%022_R-%TT%%CC%02201" />
+                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" />
                               </when>
                             </choose>
 
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%044_R-%TT%%CC%04401" IndentLevel="1" />
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%044_R-%TT%%CC%04401">
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%013_R-%TT%%CC%01301" IndentLevel="1" />
+                            <choose ParamRefId="%AID%_UP-%TT%%CC%013_R-%TT%%CC%01301">
                               <when test="1 3">
                                 <!-- Status Cyclic pattern -->
                                 <ParameterBlock Id="%AID%_PB-nnn" Name="ManualModeChangeToAuto" Inline="true" Layout="Grid">
@@ -455,19 +154,19 @@
                                     <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
                                   </Columns>
                                   <ParameterSeparator Id="%AID%_PS-nnn" Text=" Zeit&#10; (0 = nicht umschalten)" Cell="1,2" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%050_R-%TT%%CC%05001" Cell="1,3" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%049_R-%TT%%CC%04901" Cell="1,4" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%019_R-%TT%%CC%01901" Cell="1,3" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%018_R-%TT%%CC%01801" Cell="1,4" />
                                 </ParameterBlock>
                               </when>
                             </choose>
 
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%021_R-%TT%%CC%02101" />
+                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" />
                           </when>
                         </choose>
 
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Notbetrieb" UIHint="Headline" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%051_R-%TT%%CC%05101" IndentLevel="1" />
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%051_R-%TT%%CC%05101">
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" IndentLevel="1" />
+                        <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
                           <when test="1">
                             <!-- Status Cyclic pattern -->
                             <ParameterBlock Id="%AID%_PB-nnn" Name="EmergencyModeDelayCyclic" Inline="true" Layout="Grid">
@@ -481,28 +180,14 @@
                                 <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
                               </Columns>
                               <ParameterSeparator Id="%AID%_PS-nnn" Text=" Kein Wert nach (0 = nicht aktiv)" Cell="1,2" />
-                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%030_R-%TT%%CC%03001" Cell="1,3" />
-                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%029_R-%TT%%CC%02901" Cell="1,4" />
+                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" Cell="1,3" />
+                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" Cell="1,4" />
                             </ParameterBlock>
 
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                              <when test="0"> <!-- external set value -->
-                                <ParameterRefRef RefId="%AID%_UP-%TT%%CC%031_R-%TT%%CC%03102" IndentLevel="1" />
-                              </when>
-                              <when test="1"> <!-- internal regulator -->
-                                <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                                  <when test="0 2">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%031_R-%TT%%CC%03101" IndentLevel="1" />
-                                  </when>
-                                  <when test="1 2">
-                                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%032_R-%TT%%CC%03201" IndentLevel="1" />
-                                  </when>
-                                </choose>
-                              </when>
-                            </choose>
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%008_R-%TT%%CC%00801" IndentLevel="1" />
 
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%064_R-%TT%%CC%06401" IndentLevel="1" />
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%064_R-%TT%%CC%06401">
+                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" IndentLevel="1" />
+                            <choose ParamRefId="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501">
                               <when test="1">
                                 <!-- Status Cyclic pattern -->
                                 <ParameterBlock Id="%AID%_PB-nnn" Name="EmergencyModeCyclic" Inline="true" Layout="Grid">
@@ -516,133 +201,20 @@
                                     <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
                                   </Columns>
                                   <ParameterSeparator Id="%AID%_PS-nnn" Text=" Notbetrieb zyklisch senden&#10; (0 = nicht senden)" Cell="1,2" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%066_R-%TT%%CC%06601" Cell="1,3" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%065_R-%TT%%CC%06501" Cell="1,4" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%010_R-%TT%%CC%01001" Cell="1,3" />
+                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%009_R-%TT%%CC%00901" Cell="1,4" />
                                 </ParameterBlock>
 
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%020_R-%TT%%CC%02001" />
+                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" />
                               </when>
                             </choose>
-                          </when>
-                        </choose>
- 
-                        <ParameterSeparator Id="%AID%_PS-nnn" Text="Ausgabe" UIHint="Headline" />
-
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%023_R-%TT%%CC%02301" IndentLevel="1" />
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%023_R-%TT%%CC%02301">
-                          <when test="1">
-                            <!-- Status Cyclic pattern -->
-                            <ParameterBlock Id="%AID%_PB-nnn" Name="SetValueCyclic" Inline="true" Layout="Grid">
-                              <Rows>
-                                <Row Id="%AID%_PB-nnn_R-1" Name="Row1" />
-                              </Rows>
-                              <Columns>
-                                <Column Id="%AID%_PB-nnn_C-1" Name="Col1" Width="1%" />
-                                <Column Id="%AID%_PB-nnn_C-2" Name="Col2" Width="44%" />
-                                <Column Id="%AID%_PB-nnn_C-3" Name="Col3" Width="15%" />
-                                <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
-                              </Columns>
-                              <ParameterSeparator Id="%AID%_PS-nnn" Text=" Stellwert zyklisch senden&#10; (0 = nicht senden)" Cell="1,2" />
-                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%026_R-%TT%%CC%02601" Cell="1,3" />
-                              <ParameterRefRef RefId="%AID%_UP-%TT%%CC%025_R-%TT%%CC%02501" Cell="1,4" />
-                            </ParameterBlock>
-
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                              <when test="0">
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%002_R-%TT%%CC%00202" />
-                              </when>
-                              <when test="1"> <!-- internal regulator -->
-                                <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                                  <when test="0 2">
-                                    <ComObjectRefRef RefId="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" />
-                                  </when>
-                                  <when test="1 2">
-                                    <ComObjectRefRef RefId="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" />
-                                  </when>
-                                </choose>
-                              </when>
-                            </choose>
-                          </when>
-                        </choose>
-
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                          <when test="1"> <!-- internal regulator -->
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%024_R-%TT%%CC%02401" IndentLevel="1" />
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%024_R-%TT%%CC%02401">
-                              <when test="1">
-                                <!-- Status Cyclic pattern -->
-                                <ParameterBlock Id="%AID%_PB-nnn" Name="TargetTempCyclic" Inline="true" Layout="Grid">
-                                  <Rows>
-                                    <Row Id="%AID%_PB-nnn_R-1" Name="Row1" />
-                                  </Rows>
-                                  <Columns>
-                                    <Column Id="%AID%_PB-nnn_C-1" Name="Col1" Width="1%" />
-                                    <Column Id="%AID%_PB-nnn_C-2" Name="Col2" Width="44%" />
-                                    <Column Id="%AID%_PB-nnn_C-3" Name="Col3" Width="15%" />
-                                    <Column Id="%AID%_PB-nnn_C-4" Name="Col4" Width="20%" />
-                                  </Columns>
-                                  <ParameterSeparator Id="%AID%_PS-nnn" Text=" Sollwert zyklisch senden&#10; (0 = nicht senden)" Cell="1,2" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%028_R-%TT%%CC%02801" Cell="1,3" />
-                                  <ParameterRefRef RefId="%AID%_UP-%TT%%CC%027_R-%TT%%CC%02701" Cell="1,4" />
-                                </ParameterBlock>
-
-                                <ComObjectRefRef RefId="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" />
-                              </when>
-                            </choose>
-                          </when>
-                        </choose>
-
-                        <choose ParamRefId="%AID%_UP-%TT%00004_R-%TT%0000401">
-                          <when test="1"> <!-- objects for max. set value -->
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%052_R-%TT%%CC%05201" IndentLevel="1" />
                           </when>
                         </choose>
 
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Motorsteuerung" UIHint="Headline" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Die standardmäßig eingestellten, maximalen Stromstärken reichen in aller Regel aus und sollten nur erhöht werden, wenn sonst keine zuverlässige, vollständige Schließung/Öffnung des Ventils erreicht wird." UIHint="Information" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%041_R-%TT%%CC%04101" IndentLevel="1" />
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%053_R-%TT%%CC%05301" IndentLevel="1" />
-
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                          <when test="1"> <!-- internal regulator -->
-                            <ParameterSeparator Id="%AID%_PS-nnn" Text="Zusatzfunktionen" UIHint="Headline" />
-                            <ParameterRefRef RefId="%AID%_UP-%TT%%CC%055_R-%TT%%CC%05501" IndentLevel="1" />
-
-                            <!-- Scenes -->
-                            <choose ParamRefId="%AID%_UP-%TT%%CC%055_R-%TT%%CC%05501">
-                              <when test="1">
-                                <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="movie-open-outline">
-                                  <op:usePart name="SCENE" xpath="//Dynamic/ChannelIndependentBlock/ParameterBlock[@Name='SzenePart']/*" instanceFrom="1" instanceTo="12" />
-
-                                  <ComObjectRefRef RefId="%AID%_O-%TT%%CC%023_R-%TT%%CC%02301" />
-                                </ParameterBlock>
-                              </when>
-                            </choose>
-                          </when>
-                        </choose>
-
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301">
-                          <when test="1"> <!-- internal regulator -->
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" />
-                          </when>
-                        </choose>
-
-                        <choose ParamRefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401">
-                          <when test="0 2">
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" />
-                          </when>
-                          <when test="1 2">
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" />
-                            <ComObjectRefRef RefId="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" />
-                          </when>
-                        </choose>
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%020_R-%TT%%CC%02001" IndentLevel="1" />
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%021_R-%TT%%CC%02101" IndentLevel="1" />
                       </when>
                     </choose>
                   </ParameterBlock>
