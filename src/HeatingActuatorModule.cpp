@@ -280,7 +280,8 @@ void HeatingActuatorModule::readFlash(const uint8_t *data, const uint16_t size)
 
 uint16_t HeatingActuatorModule::flashSize()
 {
-    return 6 + OPENKNX_HTA_CHANNEL_COUNT * 13;
+    // version (1) + magic word (4) + channel count (1) + channel data
+    return 6 + OPENKNX_HTA_CHANNEL_COUNT * OPENKNX_HTA_FLASH_CHANNEL_SIZE;
 }
 
 void HeatingActuatorModule::savePower()

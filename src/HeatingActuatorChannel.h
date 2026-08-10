@@ -26,6 +26,9 @@
 // time a calibrated movement may exceed its calibrated drive time before it is aborted
 #define HTA_MOT_RUNTIME_MARGIN 5000
 
+// the stuck protection interval is configured in days
+#define HTA_STUCK_PROTECTION_DAY_MS 86400000UL
+
 #define HTA_OUTPUT_LED_PHASE 3000
 #define HTA_INPUT_DEBOUNCE 50
 
@@ -114,6 +117,8 @@ class HeatingActuatorChannel : public OpenKNX::Channel
 
     void processRunningMotor(uint32_t currentCount, float current, float currentLast);
     void processIdle();
+    bool isStuckProtectionDue();
+    void startStuckProtection();
     void processCalibration();
     void setCalibrationStep(CalibrationState calibrationState);
     void abortCalibration(const char *reason);
@@ -141,6 +146,9 @@ class HeatingActuatorChannel : public OpenKNX::Channel
     bool _calibrationRunStarted = false;
     uint32_t _calibratedDriveOpenTime = 0;
     uint32_t _calibratedDriveCloseTime = 0;
+
+    // start of the last complete valve travel; survives a restart via the flash data
+    uint32_t _stuckProtectionTimer = 0;
 
     float _currentPositionPercent = HTA_POSITION_INVALID;
     float _targetPositionPercent = HTA_POSITION_INVALID;

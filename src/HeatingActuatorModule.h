@@ -7,8 +7,11 @@
     #include "INA219.h"
 #endif
 
-#define OPENKNX_HTA_FLASH_VERSION 0
+#define OPENKNX_HTA_FLASH_VERSION 1
 #define OPENKNX_HTA_FLASH_MAGIC_WORD 2778334631
+
+// bytes written by HeatingActuatorChannel::writeChannelData()
+#define OPENKNX_HTA_FLASH_CHANNEL_SIZE 17
 
 const uint8_t MOTOR_PINS[OPENKNX_HTA_CHANNEL_COUNT] = {OPENKNX_HTA_CHANNEL_PINS};
 

@@ -52,6 +52,9 @@ void HeatingActuatorChannel::setup(bool configured)
         _manualModeCyclicSendTimer = delayTimerInit();
 
     _lastExternValue = delayTimerInit();
+
+    // may be overwritten by readChannelData(), which runs after setup()
+    _stuckProtectionTimer = millis();
 }
 
 void HeatingActuatorChannel::loop(bool motorPower, uint32_t currentCount, float current, float currentLast)
@@ -288,7 +291,39 @@ void HeatingActuatorChannel::processIdle()
     if (processMove())
         return;
 
+    if (isStuckProtectionDue())
+    {
+        startStuckProtection();
+        return;
+    }
+
     calculateNewSetValue();
+}
+
+//
+// stuck protection
+//
+// A valve which always stays around the same position tends to seize up. To prevent
+// that, the valve is driven to both of its mechanical end stops every few days. That
+// is exactly what the calibration run does, so it is reused here and the calibration
+// data is refreshed as a side effect.
+//
+
+bool HeatingActuatorChannel::isStuckProtectionDue()
+{
+    const uint8_t intervalDays = ParamHTA_StuckProtection;
+    if (intervalDays == 0)
+        return false;
+
+    return delayCheck(_stuckProtectionTimer, intervalDays * HTA_STUCK_PROTECTION_DAY_MS);
+}
+
+void HeatingActuatorChannel::startStuckProtection()
+{
+    logInfoP("Stuck protection due after %u h, exercising valve", (millis() - _stuckProtectionTimer) / 3600000);
+
+    // the target position is kept, so that the valve returns to it afterwards
+    startCalibration();
 }
 
 //
@@ -308,6 +343,10 @@ void HeatingActuatorChannel::startCalibration()
     _calibratedDriveOpenTime = 0;
     _calibratedDriveCloseTime = 0;
     _currentPositionPercent = HTA_POSITION_INVALID;
+
+    // every calibration run is a complete valve travel, no matter how it ends;
+    // restarting the interval here also prevents a failing run from being retried at once
+    _stuckProtectionTimer = millis();
 }
 
 void HeatingActuatorChannel::setCalibrationStep(CalibrationState calibrationState)
@@ -369,6 +408,13 @@ void HeatingActuatorChannel::processCalibration()
 
             logInfoP("Calibration complete (open: %u ms, close: %u ms)",
                      _calibratedDriveOpenTime, _calibratedDriveCloseTime);
+
+            // the valve is fully closed now, drive it back to the requested position
+            if (_targetPositionPercent != HTA_POSITION_INVALID)
+            {
+                _moveRequested = true;
+                _motorStopReason = MotorStopReason::Unknown;
+            }
             break;
         default:
             break;
@@ -693,6 +739,9 @@ void HeatingActuatorChannel::writeChannelData()
     openknx.flash.writeInt(_calibratedDriveOpenTime);
     openknx.flash.writeInt(_calibratedDriveCloseTime);
     openknx.flash.writeFloat(_currentPositionPercent);
+
+    // stored as an age, because millis() restarts at zero
+    openknx.flash.writeInt(millis() - _stuckProtectionTimer);
 }
 
 void HeatingActuatorChannel::readChannelData()
@@ -702,6 +751,14 @@ void HeatingActuatorChannel::readChannelData()
     const uint32_t calibratedDriveOpenTime = openknx.flash.readInt();
     const uint32_t calibratedDriveCloseTime = openknx.flash.readInt();
     const float currentPositionPercent = openknx.flash.readFloat();
+    uint32_t stuckProtectionAge = openknx.flash.readInt();
+
+    // continue the stuck protection interval where it was interrupted; the unsigned
+    // underflow is intended, millis() - _stuckProtectionTimer stays the correct age
+    const uint32_t maxStuckProtectionAge = 15 * HTA_STUCK_PROTECTION_DAY_MS;
+    if (stuckProtectionAge > maxStuckProtectionAge)
+        stuckProtectionAge = maxStuckProtectionAge;
+    _stuckProtectionTimer = millis() - stuckProtectionAge;
 
     // only a completed and plausible calibration can be restored, anything else
     // would make the position calculation run wild
@@ -733,6 +790,8 @@ void HeatingActuatorChannel::logChannelInfo(bool diagnoseKo)
     logInfoP("_calibrationState: %u", _calibrationState);
     logInfoP("_calibratedDriveOpenTime: %u", _calibratedDriveOpenTime);
     logInfoP("_calibratedDriveCloseTime: %u", _calibratedDriveCloseTime);
+    logInfoP("last full travel: %u h ago (stuck protection every %u days)",
+             (millis() - _stuckProtectionTimer) / 3600000, (uint8_t)ParamHTA_StuckProtection);
     logInfoP("_externEnforcedPosition: %u", _externEnforcedPosition);
     logInfoP("_currentEmergencyMode: %u", _currentEmergencyMode);
     logInfoP("_currentManualMode: %u (On=%u)", _currentManualMode, _currentManualModeOn);
